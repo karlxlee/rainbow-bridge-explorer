@@ -10,6 +10,11 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  VStack,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from "@chakra-ui/react";
 
 export default function Address(props) {
@@ -23,6 +28,20 @@ export default function Address(props) {
       <Box>
         <Heading>{props.address}</Heading>
       </Box>
+      {props.errors.length && (
+        <VStack>
+          {props.errors.map((error) => (
+            <Alert key={error} status="error">
+              <AlertIcon />
+              <AlertTitle mr={2}>{error}</AlertTitle>
+              <AlertDescription>
+                Your Chakra experience may be degraded.
+              </AlertDescription>
+              {/* <CloseButton position="absolute" right="8px" top="8px" /> */}
+            </Alert>
+          ))}
+        </VStack>
+      )}
       <Box>
         <Tabs variant="soft-rounded" colorScheme="green">
           <TabList>
@@ -48,36 +67,20 @@ export default function Address(props) {
 }
 
 export async function getStaticProps({ params }) {
-  const res = await fetch(
-    `https://explorer.mainnet.aurora.dev/api?module=account&action=tokentx&address=` +
-      params.address
-  );
-  const data = await res.json();
   let bridgeTx = [];
   let tokenTx = [];
   let nativeTx = [];
-  if (data && data.message == "OK") {
-    for (let tx of data.result) {
-      if (tx.to == "0x0000000000000000000000000000000000000000") {
-        tx["origin"] = "aurora";
-        tx["destination"] = "bridge";
-        bridgeTx.push(tx);
+  let errors = [];
 
-        if (tx.input.includes("0x8d32caf4")) {
-          tokenTx.push(tx);
-        } else if (tx.input.includes("0x6b351848")) {
-          nativeTx.push(tx);
-        }
-      }
-    }
-  }
   return {
     props: {
       address: params.address,
       bridgeTx,
       tokenTx,
       nativeTx,
+      errors,
     }, // will be passed to the page component as props
+    revalidate: 60,
   };
 }
 
