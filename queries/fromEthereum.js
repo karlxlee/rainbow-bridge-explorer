@@ -1,6 +1,5 @@
 import addresses from "@/config/bridgeAddresses.json";
 import Eth from "web3-eth";
-
 import Web3Utils from "web3-utils";
 
 const eth = new Eth(
@@ -88,11 +87,13 @@ export default async function fromEthereum(address) {
           }
 
           tx["origin"] = "ethereum";
+          tx["tokenName"] = "Ethereum";
+          tx["tokenSymbol"] = "ETH";
+          tx["tokenDecimal"] = "18";
           txList.push(tx);
         }
       }
     } else {
-      console.log(ethData.message);
       errors.push("Error fetching Ethereum data: " + ethData.message);
     }
 
@@ -162,13 +163,15 @@ export default async function fromEthereum(address) {
         }
       }
     } else {
-      console.log(tokenData.message);
       errors.push("Error fetching Ethereum token data: " + tokenData.message);
     }
 
-    return { tx: txList };
+    return { tx: txList, errors };
   } catch (error) {
-    console.log(error);
     errors.push("Error fetching Ethereum data: " + error);
+    return {
+      tx: txList,
+      errors,
+    };
   }
 }

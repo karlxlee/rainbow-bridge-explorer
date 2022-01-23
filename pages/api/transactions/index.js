@@ -10,11 +10,24 @@ export async function transactions(address, from) {
     { from: "ethereum", useQuery: fromEthereum },
   ];
   // Get the type of address
-  const type = await validateAddress(address);
+  const addressType = await validateAddress(address);
   if (from) {
     const queryRoute = routes.filter((entry) => entry.from == from)[0].useQuery;
-    const { tx, error } = await queryRoute(address);
-    return { tx, error };
+    const { tx, errors } = await queryRoute(address);
+    return { address, addressType, from, tx, errors };
+  } else {
+    let allTx = [];
+    let allErrors = [];
+    for (let type of addressType) {
+      const queryRoute = routes.filter((entry) => entry.from == type)[0]
+        .useQuery;
+      const { tx, errors } = await queryRoute(address);
+      errors &&
+        errors.length &&
+        errors.map(async (error) => allErrors.push(error));
+      tx.length && tx.map(async (entry) => allTx.push(entry));
+    }
+    return { address, addressType, tx: allTx, errors: allErrors };
   }
 }
 
@@ -24,19 +37,15 @@ export default async function handler(req, res) {
     case "GET":
       // Get data from your database
       try {
-        const { tx, error } = await transactions(query.address, query.from);
-        if (error) {
-          res.status(500).json({ error: "Failed to load data: " + error });
-          break;
-        }
+        const { tx, errors } = await transactions(query.address, query.from);
         res.status(200).json({
           address: query.address,
           object: "list",
           data: tx,
+          errors,
         });
-        // console.log(tx);
       } catch (error) {
-        res.status(500).json({ error: "Failed to load data: " + error });
+        res.status(500).json({ errors: ["Failed to load data: " + error] });
       }
       break;
 

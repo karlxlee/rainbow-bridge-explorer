@@ -16,6 +16,7 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
+import { transactions } from "@/api/transactions/index";
 
 export default function Address(props) {
   return (
@@ -37,12 +38,11 @@ export default function Address(props) {
               <AlertDescription>
                 Your Chakra experience may be degraded.
               </AlertDescription>
-              {/* <CloseButton position="absolute" right="8px" top="8px" /> */}
             </Alert>
           ))}
         </VStack>
       )}
-      <Box>
+      {/* <Box>
         <Tabs variant="soft-rounded" colorScheme="green">
           <TabList>
             <Tab>Overview</Tab>
@@ -58,8 +58,8 @@ export default function Address(props) {
             </TabPanel>
           </TabPanels>
         </Tabs>
-      </Box>
-      {props.bridgeTx.map((tx) => (
+      </Box> */}
+      {props.tx.map((tx) => (
         <TxCard key={tx.hash} {...tx} />
       ))}
     </Page>
@@ -67,17 +67,11 @@ export default function Address(props) {
 }
 
 export async function getStaticProps({ params }) {
-  let bridgeTx = [];
-  let tokenTx = [];
-  let nativeTx = [];
-  let errors = [];
-
+  const { tx, errors } = await transactions(params.address);
   return {
     props: {
       address: params.address,
-      bridgeTx,
-      tokenTx,
-      nativeTx,
+      tx,
       errors,
     }, // will be passed to the page component as props
     revalidate: 60,

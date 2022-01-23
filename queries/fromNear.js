@@ -3,6 +3,7 @@ import tokens from "@/config/tokens.json";
 
 export default async function fromNear(address) {
   let txList = [];
+  let errors = [];
   try {
     const receipts = await indexer.query(
       `
@@ -40,6 +41,9 @@ export default async function fromNear(address) {
         tx["recipient"] = "0x" + tx.args.args_json.recipient.toLowerCase();
         txList.push({
           hash: tx.originated_from_transaction_hash,
+          timestamp: Math.round(
+            parseInt(tx.receipt_included_in_block_timestamp) / 10e9
+          ),
           value: tx.args.args_json.amount,
           tokenDecimal: tokenMeta.DECIMAL,
           tokenSymbol: tokenMeta.SYMBOL,
@@ -64,6 +68,9 @@ export default async function fromNear(address) {
         tx["recipient"] = "0x" + tx.args.args_json.msg.toLowerCase();
         txList.push({
           hash: tx.originated_from_transaction_hash,
+          timestamp: Math.round(
+            parseInt(tx.receipt_included_in_block_timestamp) / 10e9
+          ),
           value: tx.args.args_json.amount,
           tokenDecimal: tokenMeta.DECIMAL,
           tokenSymbol: tokenMeta.SYMBOL,
@@ -72,8 +79,13 @@ export default async function fromNear(address) {
       }
     }
 
-    return { tx: txList };
+    return { tx: txList, errors };
   } catch (error) {
-    return { tx: txList, error };
+    if (error.name == "SequelizeConnectionError") {
+      errors.push("Near Indexer is too busy and can't provide data");
+    } else {
+      errors.push(JSON.stringify(error));
+    }
+    return { tx: txList, errors };
   }
 }

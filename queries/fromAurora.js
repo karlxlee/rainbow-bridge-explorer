@@ -7,6 +7,7 @@ const eth = new Eth(
 
 export default async function fromAurora(address) {
   let txList = [];
+  let errors = [];
   try {
     // Get transfers of ether from Aurora to near
 
@@ -81,7 +82,6 @@ export default async function fromAurora(address) {
                           null
                         )
                       ).recipient;
-                      console.log(recipientDecoded);
 
                       if (Web3Utils.isAddress(recipientDecoded)) {
                         recipient = recipientDecoded;
@@ -106,15 +106,21 @@ export default async function fromAurora(address) {
             }
           })
         );
+      } else {
+        errors.push(
+          "Error fetching Aurora user account transfers data: " + allTx.message
+        );
       }
     } catch (error) {
+      errors.push(
+        "Error fetching and processing Aurora ETH bridge transfers data: " +
+          error
+      );
       return {
         tx: txList,
-        error: "Error fetching Aurora ETH bridge transfers data: " + error,
+        errors,
       };
     }
-
-    console.log("done eth transfers");
 
     // Get token burns
     const tokenTransfers = await fetch(
@@ -146,7 +152,6 @@ export default async function fromAurora(address) {
                 "0xe9217bc70b7ed1f598ddd3199e80b093fa71124f"
               ) {
                 // Seems to be to NEAR
-                console.log("tonear");
                 let recipient;
                 try {
                   recipient = Web3Utils.hexToUtf8(tx.input);
@@ -159,13 +164,11 @@ export default async function fromAurora(address) {
                 tx["recipient"] = recipient;
 
                 txList.push(tx);
-                console.log("pushed");
               } else if (
                 log.address.toLowerCase() ==
                 "0xb0bd02f6a392af548bdf1cfaee5dfa0eefcc8eab"
               ) {
                 // Token bridge burn
-                console.log("toeth");
 
                 const recipientTopic = log.topics[3];
                 const recipient = JSON.parse(
@@ -195,19 +198,24 @@ export default async function fromAurora(address) {
         })
       );
     } else {
+      errors.push(
+        "Error fetching Aurora user account token transfers data: " +
+          tokenTransfers.message
+      );
       return {
         tx: txList,
-        error:
-          "Error fetching Aurora token bridge transfers data: " +
-          tokenTransfers.message,
+        errors,
       };
     }
-    console.log("done everything");
     return { tx: txList };
   } catch (error) {
+    errors.push(
+      "Error fetching and processing Aurora bridge token transfers data: " +
+        error
+    );
     return {
       tx: txList,
-      error,
+      errors,
     };
   }
 }

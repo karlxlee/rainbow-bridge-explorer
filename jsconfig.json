@@ -5,7 +5,8 @@
       "@/components/*": ["components/*"],
       "@/utils/*": ["utils/*"],
       "@/config/*": ["config/*"],
-      "@/queries/*": ["queries/*"]
+      "@/queries/*": ["queries/*"],
+      "@/api/*": ["pages/api/*"]
     }
   }
 }

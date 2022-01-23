@@ -1,37 +1,17 @@
 import ChakraNextImage from "@/components/ChakraNextImage";
 import { Text, Box, Spacer, Flex, Tag } from "@chakra-ui/react";
+import tokenIcon from "@/utils/tokenIcon";
+import TimeAgo from "@/components/TimeAgo";
+import Link from "next/link";
 
 const tagColors = {
   aurora: "#78d64b",
   ethereum: "#1c1ce1",
-  bridge: "black",
   near: "#262626",
 };
 
 const TxCard = (props) => {
-  let symbol;
-  if (props.tokenSymbol == "NEAR") {
-    symbol = "/near-icon.svg";
-  } else if (["WETH", "WMATIC"].includes(props.tokenSymbol)) {
-    symbol =
-      "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/svg/color/" +
-      props.tokenSymbol.substring(1).toLowerCase() +
-      ".svg";
-  } else if (
-    props.tokenSymbol[0] == "n" &&
-    props.tokenSymbol.length >= 4 &&
-    props.origin.toLowerCase() == "near"
-  ) {
-    symbol =
-      "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/svg/color/" +
-      props.tokenSymbol.substring(1).toLowerCase() +
-      ".svg";
-  } else {
-    symbol =
-      "https://cdn.jsdelivr.net/gh/atomiclabs/cryptocurrency-icons@d5c68edec1f5eaec59ac77ff2b48144679cebca1/svg/color/" +
-      props.tokenSymbol.toLowerCase() +
-      ".svg";
-  }
+  const icon = tokenIcon(props.tokenSymbol);
   return (
     <Box
       p={6}
@@ -40,9 +20,13 @@ const TxCard = (props) => {
       display="flex"
       alignItems="center"
     >
-      <ChakraNextImage width="2em" height="2em" src={symbol} />
+      {icon && <ChakraNextImage width="2em" height="2em" src={icon} />}
       <Text pl={2}>
-        {props.value / 10 ** props.tokenDecimal + " " + props.tokenSymbol}
+        {Number.parseFloat(props.value / 10 ** props.tokenDecimal).toPrecision(
+          4
+        ) +
+          " " +
+          props.tokenSymbol}
       </Text>
       <Flex pl={2}>
         <Tag
@@ -62,7 +46,17 @@ const TxCard = (props) => {
         </Tag>
       </Flex>
       <Spacer />
-      <Text>{props.hash.slice(0, 20) + "..."}</Text>
+
+      <Text>
+        <TimeAgo timestamp={props.timeStamp} />
+      </Text>
+      <Spacer />
+
+      <Link href={"/transactions/" + props.hash}>
+        <a>
+          <Text>{props.hash.slice(0, 20) + "..."}</Text>
+        </a>
+      </Link>
     </Box>
   );
 };

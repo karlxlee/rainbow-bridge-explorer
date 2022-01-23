@@ -8,21 +8,21 @@ export default async function validateAddress(address) {
   const hex = /^[0-9a-fA-F]+$/;
   try {
     if (hex.test(stripAddr) && stripAddr.length == 64) {
-      return "near";
+      return ["near"];
     }
   } catch {}
 
   // Readable NEAR address
   try {
     if (stripAddr.split(".")[1].toLowerCase() == "near") {
-      return "near";
+      return ["near"];
     }
   } catch {}
 
   // Ethereum address
   try {
     if (Web3Utils.isAddress(stripAddr.toLowerCase())) {
-      return "ethereum";
+      return ["ethereum", "aurora"];
     }
   } catch {}
   return "unclassified";
