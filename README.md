@@ -2,6 +2,8 @@
 
 For the NEAR MetaBUILD Hackathon
 
+Rainbow Bridge Explorer is both a front-end and a public REST API for exploring bridge transactions between NEAR, Aurora, and Ethereum.
+
 ## Getting Started
 
 First, run the development server:
@@ -11,6 +13,20 @@ npm run dev
 # or
 yarn dev
 ```
+
+## Project Sustainability
+
+### Upgrading / changing the bridge contracts
+
+Bridge contracts may need to be upgraded to newer versions, changing key contract addresses. Rainbow Bridge Explorer can easily adapt to new contract addresses. Simply update `/config/bridgeAddresses.json`.
+
+### Adding new chains
+
+As Rainbow Bridge connects new chains, Rainbow Bridge Explorer can be upgraded to support them. Adding a new chain involves:
+
+1. Adding the chain's bridge addresses (token lockers) to `/config/bridgeAddresses.json`
+2. Writing a query for transactions originating from the chain in `/queries`
+3. Writing a labeller to label these transactions in `/labellers`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

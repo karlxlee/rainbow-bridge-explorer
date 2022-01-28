@@ -32,7 +32,7 @@ const SearchBar = (props) => {
           fontWeight="regular"
           leftIcon={<SearchIcon />}
           size="md"
-          backgroundColor="lightblue"
+          backgroundColor="blue"
           color="white"
           px={6}
         >

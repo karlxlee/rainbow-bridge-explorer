@@ -16,7 +16,7 @@
     "@near-eth/aurora-nep141": "^1.2.2",
     "@near-eth/client": "^1.8.0",
     "@near-eth/nep141-erc20": "^2.2.0",
-    "autobahn": "^20.9.2",
+    "etherscan-api": "^10.0.5",
     "framer-motion": "4",
     "javascript-time-ago": "^2.3.10",
     "near-api-js": "^0.44.2",

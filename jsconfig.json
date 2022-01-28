@@ -6,6 +6,7 @@
       "@/utils/*": ["utils/*"],
       "@/config/*": ["config/*"],
       "@/queries/*": ["queries/*"],
+      "@/labellers/*": ["labellers/*"],
       "@/api/*": ["pages/api/*"]
     }
   }

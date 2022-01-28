@@ -1,16 +1,12 @@
 import ChakraNextImage from "@/components/ChakraNextImage";
-import { Text, Box, Spacer, Flex, Tag } from "@chakra-ui/react";
+import { Text, Box, Spacer, Flex } from "@chakra-ui/react";
 import tokenIcon from "@/utils/tokenIcon";
 import TimeAgo from "@/components/TimeAgo";
 import Link from "next/link";
-
-const tagColors = {
-  aurora: "#78d64b",
-  ethereum: "#1c1ce1",
-  near: "#262626",
-};
+import ChainTag from "@/components/ChainTag";
 
 const TxCard = (props) => {
+  console.log(props);
   const icon = tokenIcon(props.tokenSymbol);
   return (
     <Box
@@ -29,30 +25,18 @@ const TxCard = (props) => {
           props.tokenSymbol}
       </Text>
       <Flex pl={2}>
-        <Tag
-          size={"md"}
-          variant="solid"
-          backgroundColor={tagColors[props.origin.toLowerCase()]}
-        >
-          {props.origin}
-        </Tag>
+        <ChainTag chain={props.origin} />
         <Text>--&gt;</Text>
-        <Tag
-          size={"md"}
-          variant="solid"
-          backgroundColor={tagColors[props.destination.toLowerCase()]}
-        >
-          {props.destination}
-        </Tag>
+        <ChainTag chain={props.destination} />
       </Flex>
       <Spacer />
 
       <Text>
-        <TimeAgo timestamp={props.timeStamp} />
+        <TimeAgo unixTimestamp={props.timestamp} />
       </Text>
       <Spacer />
 
-      <Link href={"/transactions/" + props.hash}>
+      <Link href={"/transaction/" + props.hash}>
         <a>
           <Text>{props.hash.slice(0, 20) + "..."}</Text>
         </a>

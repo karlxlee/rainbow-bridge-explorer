@@ -5,5 +5,10 @@ const theme = extendTheme({
     heading: "Inter",
     body: "Inter",
   },
+  fontWeights: {
+    normal: 400,
+    medium: 500,
+    bold: 700,
+  },
 });
 export default theme;

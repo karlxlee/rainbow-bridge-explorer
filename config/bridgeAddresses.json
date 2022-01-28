@@ -2,5 +2,16 @@
   "ethereum": {
     "eth": "0x6bfad42cfc4efc96f529d786d643ff4a8b89fa52",
     "erc20": "0x23ddd3e3692d1861ed57ede224608875809e127f"
+  },
+  "aurora": {
+    "eth": {
+      "toNear": "0xe9217bc70b7ed1f598ddd3199e80b093fa71124f",
+      "toEthereum": "0xb0bd02f6a392af548bdf1cfaee5dfa0eefcc8eab"
+    },
+    "erc20": {
+      "burn": "0x0000000000000000000000000000000000000000",
+      "toNear": "0xe9217bc70b7ed1f598ddd3199e80b093fa71124f",
+      "toEthereum": "0xb0bd02f6a392af548bdf1cfaee5dfa0eefcc8eab"
+    }
   }
 }

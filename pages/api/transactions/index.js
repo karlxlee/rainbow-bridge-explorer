@@ -1,15 +1,14 @@
 import validateAddress from "@/utils/validateAddress";
-import fromNear from "@/queries/fromNear";
-import fromAurora from "@/queries/fromAurora";
-import fromEthereum from "@/queries/fromEthereum";
+import { nearTxByAddress } from "@/queries/near";
+import { auroraTxByAddress } from "@/queries/aurora";
+import { ethereumTxByAddress } from "@/queries/ethereum";
 
 export async function transactions(address, from) {
   const routes = [
-    { from: "near", useQuery: fromNear },
-    { from: "aurora", useQuery: fromAurora },
-    { from: "ethereum", useQuery: fromEthereum },
+    { from: "near", useQuery: nearTxByAddress },
+    { from: "aurora", useQuery: auroraTxByAddress },
+    { from: "ethereum", useQuery: ethereumTxByAddress },
   ];
-  // Get the type of address
   const addressType = await validateAddress(address);
   if (from) {
     const queryRoute = routes.filter((entry) => entry.from == from)[0].useQuery;
@@ -25,7 +24,7 @@ export async function transactions(address, from) {
       errors &&
         errors.length &&
         errors.map(async (error) => allErrors.push(error));
-      tx.length && tx.map(async (entry) => allTx.push(entry));
+      tx && tx.length && tx.map(async (entry) => allTx.push(entry));
     }
     return { address, addressType, tx: allTx, errors: allErrors };
   }

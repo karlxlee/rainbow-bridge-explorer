@@ -7,6 +7,7 @@ import en from "javascript-time-ago/locale/en.json";
 
 function MyApp({ Component, pageProps }) {
   TimeAgo.addDefaultLocale(en);
+  TimeAgo.addLocale(en);
   return (
     <ChakraProvider theme={theme}>
       <Component {...pageProps} />{" "}
