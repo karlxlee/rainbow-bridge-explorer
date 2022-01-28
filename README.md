@@ -26,7 +26,7 @@ As Rainbow Bridge connects new chains, Rainbow Bridge Explorer can be upgraded t
 
 1. Adding the chain's bridge addresses (token lockers) to `/config/bridgeAddresses.json`
 2. Writing a query for transactions originating from the chain in `/queries`
-3. Writing a labeller to label these transactions in `/labellers`
+3. Adding the query to the api routes in `/api`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
