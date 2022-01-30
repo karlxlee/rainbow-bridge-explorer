@@ -14,7 +14,9 @@ export default function Asset({ token }) {
       </Head>
       <Box>
         <Stack gap={2}>
-          <Heading>{"Asset: " + token.symbol}</Heading>
+          <Heading>
+            {"Asset: " + token.name + " (" + token.symbol + ")"}
+          </Heading>
           <ChakraNextImage
             width={20}
             height={20}
@@ -39,6 +41,12 @@ export default function Asset({ token }) {
               <Text ml={2}>{token.aurora_address}</Text>
             </Flex>
           )}
+          {token.near_address && (
+            <Flex align="center">
+              <ChainTag chain={"near"} />
+              <Text ml={2}>{token.near_address}</Text>
+            </Flex>
+          )}
         </Stack>
       </Box>
     </Page>
@@ -48,15 +56,20 @@ export default function Asset({ token }) {
 export async function getStaticProps({ params }) {
   const tokensFolder =
     "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens";
+
   const tokens = await fetchBridgeTokenList();
   const path = tokens.filter(
     (entry) => entry.symbol.toLowerCase() == params.symbol.toLowerCase()
   )[0].path;
 
+  console.log(path);
+
   let token;
   try {
     token = await fetch(tokensFolder + "/" + path).then((r) => r.json());
-    console.log(token);
+    token["symbol"] = path.includes("testnet")
+      ? token["symbol"] + "_testnet"
+      : token["symbol"];
   } catch (error) {
     console.log(error);
   }
@@ -72,25 +85,19 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const tokens = await fetchBridgeTokenList();
   // Get the paths we want to pre-render based on posts
-  // const paths = tokens.map((entry) => {
-  //   return {
-  //     params: {
-  //       symbol: entry.symbol,
-  //     },
-  //   };
-  // });
+  const paths = tokens.map((entry) => {
+    return {
+      params: {
+        symbol: entry.symbol,
+      },
+    };
+  });
 
   // We'll pre-render only these paths at build time.
   // { fallback: blocking } will server-render pages
   // on-demand if the path doesn't exist.
   return {
-    paths: [
-      {
-        params: {
-          symbol: "USDT",
-        },
-      },
-    ],
+    paths,
     fallback: "blocking",
   };
 }

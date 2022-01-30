@@ -15,7 +15,11 @@ const fetchBridgeTokenList = async () => {
   const jsonFetches = jsonFiles.map(({ path }) =>
     fetch(tokensFolder + "/" + path)
       .then((r) => r.json())
-      .then((r) => ({ path, ...r }))
+      .then((r) => ({
+        path,
+        ...r,
+        symbol: path.includes("testnet") ? r.symbol + "_testnet" : r.symbol,
+      }))
   );
   const jsonRes = await Promise.allSettled(jsonFetches).then((r) =>
     r.filter(async (entry) => entry.status == "fulfilled")
