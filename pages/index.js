@@ -27,7 +27,9 @@ export default function Home(props) {
           </Heading>
           <Stack>
             {props.tx.near &&
-              props.tx.near.map((tx) => <TxCard key={tx.hash} {...tx} />)}
+              props.tx.near.map((tx) => (
+                <TxCard key={tx.hash} clickable={true} {...tx} />
+              ))}
           </Stack>
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>

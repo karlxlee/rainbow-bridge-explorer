@@ -65,7 +65,7 @@ export default function Transaction(props) {
           </Flex>
         </WrapItem>
       </Wrap>
-      <TxCard {...props.tx} />
+      <TxCard {...props.tx} showDateTime={true} />
       <Grid templateColumns="repeat(2, 1fr)" gap={{ sm: 0, md: 3, lg: 3 }}>
         <GridItem colSpan={{ sm: 2, md: 1, lg: 1 }}>
           <Box p={6} borderWidth={1} borderRadius="md">
@@ -73,7 +73,9 @@ export default function Transaction(props) {
             <Flex alignItems="center">
               <Link href={"/address/" + props.tx.sender}>
                 <a>
-                  <Text mr={2}>{props.tx.sender}</Text>
+                  <Text as={"u"} mr={2}>
+                    {props.tx.sender}
+                  </Text>
                 </a>
               </Link>
               <ClipboardButton text={props.tx.sender} />
@@ -85,15 +87,13 @@ export default function Transaction(props) {
           <Box p={6} borderWidth={1} borderRadius="md">
             <Text fontWeight={"bold"}>To</Text>
             <Flex alignItems="center">
-              <Box
-                mr={2}
-                styleConfig={{
-                  whiteSpace: "normal",
-                  overflowWrap: "break-all",
-                }}
-              >
-                {props.tx.recipient}
-              </Box>
+              <Link href={"/address/" + props.tx.sender}>
+                <a>
+                  <Text as={"u"} mr={2}>
+                    {props.tx.recipient}
+                  </Text>
+                </a>
+              </Link>
               <ClipboardButton text={props.tx.recipient} />
             </Flex>
             <ChainTag chain={props.tx.destination} />

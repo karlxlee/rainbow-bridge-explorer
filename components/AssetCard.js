@@ -19,8 +19,7 @@ const AssetCard = ({ token }) => {
             src={
               "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens" +
               "/" +
-              token.symbol.toLowerCase() +
-              ".svg"
+              token.svgPath
             }
           />
           <Text ml={2}>{token.symbol}</Text>

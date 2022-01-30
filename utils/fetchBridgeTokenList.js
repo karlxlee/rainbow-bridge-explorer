@@ -19,12 +19,20 @@ const fetchBridgeTokenList = async () => {
         path,
         ...r,
         symbol: path.includes("testnet") ? r.symbol + "_testnet" : r.symbol,
+        svgPath: imageFiles.filter(
+          (entry) => entry.path.split(".svg")[0] == path.split(".json")[0]
+        ).length
+          ? imageFiles.filter(
+              (entry) => entry.path.split(".svg")[0] == path.split(".json")[0]
+            )[0].path
+          : "",
       }))
   );
   const jsonRes = await Promise.allSettled(jsonFetches).then((r) =>
     r.filter(async (entry) => entry.status == "fulfilled")
   );
   const tokens = jsonRes.map((entry) => entry.value);
+  console.log(tokens);
   return tokens;
 };
 

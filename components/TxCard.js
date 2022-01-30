@@ -16,6 +16,7 @@ const TxCard = (props) => {
         borderWidth={1}
         borderRadius="md"
         display="flex"
+        flexWrap="wrap"
         alignItems="center"
       >
         {icon && <ChakraNextImage width="2em" height="2em" src={icon} />}
@@ -36,20 +37,30 @@ const TxCard = (props) => {
         <Text>
           <TimeAgo unixTimestamp={props.timestamp} /> ago
         </Text>
-        <Spacer />
 
+        {props.showDateTime && (
+          <>
+            <Spacer />
+            <Text>
+              {new Date(props.timestamp * 1000).toLocaleString("en-US")}
+            </Text>
+          </>
+        )}
         {props.showHash && (
-          <Link href={"/transaction/" + props.hash}>
-            <a>
-              <Text>{props.hash.slice(0, 20) + "..."}</Text>
-            </a>
-          </Link>
+          <>
+            <Spacer />
+            <Link href={"/transaction/" + props.hash}>
+              <a>
+                <Text>{props.hash.slice(0, 20) + "..."}</Text>
+              </a>
+            </Link>
+          </>
         )}
       </Box>
     );
   };
 
-  if (!props.showHash) {
+  if (props.clickable) {
     return (
       <Link href={"/transaction/" + props.hash}>
         <a>

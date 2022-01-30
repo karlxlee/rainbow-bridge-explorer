@@ -2,7 +2,7 @@ const tokenIcon = (tokenSymbol) => {
   let icon;
   if (!tokenSymbol) {
     icon = undefined;
-  } else if (tokenSymbol == "NEAR") {
+  } else if (tokenSymbol.toUpperCase() == "NEAR") {
     icon = "/near-icon.svg";
   } else if (["WETH", "WMATIC"].includes(tokenSymbol)) {
     icon =

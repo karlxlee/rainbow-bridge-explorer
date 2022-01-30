@@ -15,8 +15,11 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { transactions } from "@/api/transactions/index";
+import ClipboardButton from "@/components/ClipboardButton";
 
 export default function Address(props) {
   return (
@@ -26,9 +29,14 @@ export default function Address(props) {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box>
-        <Heading>{props.address}</Heading>
-      </Box>
+      <Wrap>
+        <WrapItem>
+          <Heading>{props.address}</Heading>
+        </WrapItem>
+        <WrapItem>
+          <ClipboardButton text={props.address} />
+        </WrapItem>
+      </Wrap>
       {props.errors.length && (
         <VStack>
           {props.errors.map((error) => (

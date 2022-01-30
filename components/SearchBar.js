@@ -20,7 +20,7 @@ const SearchBar = (props) => {
       <Flex>
         <Input
           required
-          placeholder="Search by address"
+          placeholder="Enter address or tx hash"
           name="address"
           size="md"
           maxW="sm"
