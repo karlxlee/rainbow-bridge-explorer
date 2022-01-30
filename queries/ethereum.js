@@ -103,17 +103,27 @@ async function decodeEthRecipient(logs) {
 }
 
 // Ethereum to bridge locker
-export async function ethereumTxByAddress(address) {
+export async function ethereumTxByAddress(address, offset) {
   let txList = [];
   let errors = [];
 
+  const ethEndpoint = offset
+    ? "https://api.etherscan.io/api?module=account&action=txlist&page=1&offset=" +
+      offset +
+      "&sort=desc&address="
+    : "https://api.etherscan.io/api?module=account&action=txlist&sort=desc&address=";
+
+  const tokenEndpoint = offset
+    ? "https://api.etherscan.io/api?module=account&action=tokentx&page=1&offset=" +
+      offset +
+      "&sort=desc&address="
+    : "https://api.etherscan.io/api?module=account&action=tokentx&sort=desc&address=";
+
   try {
     // Eth transfers to Aurora and NEAR
+
     const ethData = await fetch(
-      `https://api.etherscan.io/api?module=account&action=txlist&sort=desc&address=` +
-        address +
-        `&apikey=` +
-        process.env.ETHERSCAN_KEY
+      ethEndpoint + address + `&apikey=` + process.env.ETHERSCAN_KEY
     ).then((r) => r.json());
     if (ethData && ethData.message.includes("OK")) {
       for (let tx of ethData.result) {
@@ -150,11 +160,9 @@ export async function ethereumTxByAddress(address) {
     }
 
     // Token transfers
+
     const tokenRes = await fetch(
-      `https://api.etherscan.io/api?module=account&action=tokentx&sort=desc&address=` +
-        address +
-        `&apikey=` +
-        process.env.ETHERSCAN_KEY
+      tokenEndpoint + address + `&apikey=` + process.env.ETHERSCAN_KEY
     );
     const tokenData = await tokenRes.json();
     if (tokenData && tokenData.message.includes("OK")) {
@@ -202,55 +210,17 @@ export async function ethereumRecentTx() {
   let txList = [];
   let errors = [];
 
-  console.log("tring");
-  try {
-    // Token transfers
-    const tokenRes = await fetch(
-      `https://api.etherscan.io/api?module=account&action=tokentx&sort=desc&&page=1offset=10&address=` +
-        "0x23ddd3e3692d1861ed57ede224608875809e127f" +
-        `&apikey=` +
-        process.env.ETHERSCAN_KEY
-    );
-    const tokenData = await tokenRes.json();
-    if (tokenData && tokenData.message.includes("OK")) {
-      for (let tx of tokenData.result) {
-        if (
-          tx.to.toLowerCase() == addresses["ethereum"]["erc20"].toLowerCase()
-        ) {
-          // Get the tx logs in order to find out the transfer destination
-          const logs = await fetch(
-            "https://mainnet.infura.io/v3/" + process.env.INFURA_PROJECT_ID,
-
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: `{"jsonrpc":"2.0","method":"eth_getTransactionReceipt","params": ["${tx.hash}"],"id":1}`,
-            }
-          )
-            .then((r) => r.json())
-            .then((r) => r.result.logs);
-          tx["origin"] = "ethereum";
-          tx["timestamp"] = tx["timeStamp"];
-          const { recipient, destination } = await decodeTokenRecipient(logs);
-          tx["recipient"] = recipient;
-          tx["destination"] = destination;
-          txList.push(tx);
-        }
-      }
-    } else {
-      errors.push("Error fetching Ethereum token data: " + tokenData.message);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  let ethTx = await ethereumTxByAddress(addresses["ethereum"]["eth"], 10);
+  let tokenTx = await ethereumTxByAddress(addresses["ethereum"]["erc20"], 10);
+  txList = [...ethTx.tx, ...tokenTx.tx];
+  txList.sort((a, b) => b.blockNumber - a.blockNumber);
 
   return {
     tx: txList,
     errors,
   };
 }
+
 export async function ethereumTxByHash(hash) {
   let tx = {};
   let errors = [];

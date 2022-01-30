@@ -5,7 +5,7 @@ const Page = ({ children }) => {
   return (
     <>
       <Nav />
-      <Container mt={6} maxW="container.lg">
+      <Container mt={12} maxW="container.lg">
         <Stack spacing={4}>{children}</Stack>
       </Container>
     </>

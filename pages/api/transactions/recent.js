@@ -1,19 +1,24 @@
 import { ethereumRecentTx } from "@/queries/ethereum";
+import { nearRecentTx } from "@/queries/near";
+import { auroraRecentTx } from "@/queries/aurora";
 
 export async function recent() {
-  const routes = [{ from: "ethereum", useQuery: ethereumRecentTx }];
+  const routes = [
+    { from: "ethereum", useQuery: ethereumRecentTx },
+    { from: "near", useQuery: nearRecentTx },
+    { from: "aurora", useQuery: auroraRecentTx },
+  ];
 
-  let allTx = [];
+  let allTx = {};
   let allErrors = [];
   for (let route of routes) {
     const { tx, errors } = await route.useQuery();
-    console.log(tx);
-    console.log(errors);
-
     errors &&
       errors.length &&
       errors.map(async (error) => allErrors.push(error));
-    tx && tx.length && tx.map(async (entry) => allTx.push(entry));
+    allTx[route.from] = [];
+    tx && tx.length && tx.map(async (entry) => allTx[route.from].push(entry));
+    console.log(allTx);
   }
   return { tx: allTx, errors: allErrors };
 }

@@ -42,25 +42,9 @@ export default function Address(props) {
           ))}
         </VStack>
       )}
-      {/* <Box>
-        <Tabs variant="soft-rounded" colorScheme="green">
-          <TabList>
-            <Tab>Overview</Tab>
-            <Tab>Trends</Tab>
-            <Tab>Score</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <p>one!</p>
-            </TabPanel>
-            <TabPanel>
-              <p>two!</p>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box> */}
+
       {props.tx.map((tx) => (
-        <TxCard key={tx.hash} {...tx} />
+        <TxCard key={tx.hash} {...tx} showHash={true} />
       ))}
     </Page>
   );

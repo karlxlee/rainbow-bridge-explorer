@@ -162,7 +162,12 @@ async function labelTransactions(transactions) {
   return { tx: finalTx, errors: errors };
 }
 
-export async function auroraTxByAddress(address, startTimestamp, endTimestamp) {
+export async function auroraTxByAddress(
+  address,
+  offset,
+  startTimestamp,
+  endTimestamp
+) {
   let txList = [];
   let errors = [];
   try {
@@ -172,7 +177,8 @@ export async function auroraTxByAddress(address, startTimestamp, endTimestamp) {
         `&endtimestamp=` +
         endTimestamp +
         `&sort=desc&address=` +
-        address
+        address +
+        (offset ? "&page=1&offset=" + offset : "")
     ).then((r) => r.json());
 
     if ((allTx.message = "OK")) {
@@ -188,7 +194,8 @@ export async function auroraTxByAddress(address, startTimestamp, endTimestamp) {
         `&endtimestamp=` +
         endTimestamp +
         `&sort=desc&address=` +
-        address
+        address +
+        (offset ? "&page=1&offset=" + offset : "")
     ).then((r) => r.json());
     if ((tokenTransfers.message = "OK")) {
       txList.push(...tokenTransfers.result);
@@ -210,6 +217,31 @@ export async function auroraTxByAddress(address, startTimestamp, endTimestamp) {
       errors,
     };
   }
+}
+
+export async function auroraRecentTx() {
+  let txList = [];
+  let errors = [];
+
+  let ethToNearTx = await auroraTxByAddress(
+    addresses["aurora"]["eth"]["toNear"],
+    5
+  );
+  let ethToEthereumTx = await auroraTxByAddress(
+    addresses["aurora"]["eth"]["toEthereum"],
+    5
+  );
+
+  let tokenTx = await auroraTxByAddress(
+    addresses["aurora"]["erc20"]["burn"],
+    10
+  );
+  txList = [...ethToNearTx.tx, ...ethToEthereumTx.tx, ...tokenTx.tx];
+  txList.sort((a, b) => b.blockNumber - a.blockNumber);
+  return {
+    tx: txList,
+    errors,
+  };
 }
 
 async function labelTransaction(transaction) {

@@ -106,9 +106,12 @@ export async function nearRecentTx() {
       `
         SELECT * FROM public.receipts JOIN public.action_receipt_actions
         ON public.action_receipt_actions.receipt_id = public.receipts.receipt_id
+        WHERE predecessor_account_id <> 'relay.aurora'
         AND receiver_account_id IN :tokenAddresses
+        AND args->'method_name' IS NOT NULL
+        AND args->'args_json' IS NOT NULL
         ORDER BY included_in_block_timestamp DESC
-        LIMIT 50
+        LIMIT 200
         `,
       {
         type: QueryTypes.SELECT,
@@ -120,6 +123,7 @@ export async function nearRecentTx() {
     txList = await labelTransactions(receipts);
     return { tx: txList, errors };
   } catch (error) {
+    console.log(error);
     if (error.name == "SequelizeConnectionError") {
       errors.push("Near Indexer is too busy and can't provide data");
     } else {
@@ -155,8 +159,6 @@ export async function nearTxByHash(hash) {
     );
     if (receipts.length) {
       tx = await labelTransactions(receipts);
-      console.log(tx);
-      console.log("success");
       return { tx: tx[0], errors };
     } else {
       return { tx, errors };
