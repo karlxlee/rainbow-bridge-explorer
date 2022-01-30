@@ -48,7 +48,6 @@ async function labelTransactions(transactions) {
           addresses["aurora"]["erc20"]["burn"],
         ].includes(tx.to.toLowerCase())
       ) {
-        console.log("Hit");
         if (tx.logs) {
           txList.push(tx);
         } else {
@@ -163,12 +162,16 @@ async function labelTransactions(transactions) {
   return { tx: finalTx, errors: errors };
 }
 
-export async function auroraTxByAddress(address) {
+export async function auroraTxByAddress(address, startTimestamp, endTimestamp) {
   let txList = [];
   let errors = [];
   try {
     const allTx = await fetch(
-      `https://explorer.mainnet.aurora.dev/api?module=account&action=txlist&sort=desc&address=` +
+      `https://explorer.mainnet.aurora.dev/api?module=account&action=txlist&starttimestamp=` +
+        startTimestamp +
+        `&endtimestamp=` +
+        endTimestamp +
+        `&sort=desc&address=` +
         address
     ).then((r) => r.json());
 
@@ -180,7 +183,11 @@ export async function auroraTxByAddress(address) {
     }
 
     const tokenTransfers = await fetch(
-      `https://explorer.mainnet.aurora.dev/api?module=account&action=tokentx&sort=desc&address=` +
+      `https://explorer.mainnet.aurora.dev/api?module=account&action=tokentx&starttimestamp=` +
+        startTimestamp +
+        `&endtimestamp=` +
+        endTimestamp +
+        `&sort=desc&address=` +
         address
     ).then((r) => r.json());
     if ((tokenTransfers.message = "OK")) {

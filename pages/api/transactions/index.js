@@ -10,6 +10,7 @@ export async function transactions(address, from) {
     { from: "ethereum", useQuery: ethereumTxByAddress },
   ];
   const addressType = await validateAddress(address);
+  console.log(addressType);
   if (from) {
     const queryRoute = routes.filter((entry) => entry.from == from)[0].useQuery;
     const { tx, errors } = await queryRoute(address);
@@ -17,6 +18,7 @@ export async function transactions(address, from) {
   } else {
     let allTx = [];
     let allErrors = [];
+    console.log(addressType);
     for (let type of addressType) {
       const queryRoute = routes.filter((entry) => entry.from == type)[0]
         .useQuery;
