@@ -3,4 +3,5 @@ module.exports = {
   images: {
     domains: ["cdn.jsdelivr.net", "raw.githubusercontent.com"],
   },
+  staticPageGenerationTimeout: 1000,
 };
