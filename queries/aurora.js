@@ -96,7 +96,7 @@ async function labelTransactions(transactions) {
           ) {
             if (to == addresses["aurora"]["eth"]["toNear"]) {
               destination = "near";
-              recipient = await decodeToEthereumAddress(tx.input);
+              recipient = await decodeToNearAddress(tx.input);
             } else if (to == addresses["aurora"]["eth"]["toEthereum"]) {
               destination = "ethereum";
               recipient = await decodeToEthereumAddress(
@@ -267,7 +267,7 @@ async function labelTransaction(transaction) {
         ) {
           if (to == addresses["aurora"]["eth"]["toNear"]) {
             destination = "near";
-            recipient = await decodeToEthereumAddress(tx.input);
+            recipient = await decodeToNearAddress(tx.input);
           } else if (to == addresses["aurora"]["eth"]["toEthereum"]) {
             destination = "ethereum";
             recipient = await decodeToEthereumAddress(
