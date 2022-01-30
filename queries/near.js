@@ -98,6 +98,37 @@ export async function nearTxByAddress(address) {
   }
 }
 
+export async function nearRecentTx() {
+  let txList = [];
+  let errors = [];
+  try {
+    const receipts = await indexer.query(
+      `
+        SELECT * FROM public.receipts JOIN public.action_receipt_actions
+        ON public.action_receipt_actions.receipt_id = public.receipts.receipt_id
+        AND receiver_account_id IN :tokenAddresses
+        ORDER BY included_in_block_timestamp DESC
+        LIMIT 50
+        `,
+      {
+        type: QueryTypes.SELECT,
+        replacements: {
+          tokenAddresses: [tokens.map((token) => token.NEAR_ID)],
+        },
+      }
+    );
+    txList = await labelTransactions(receipts);
+    return { tx: txList, errors };
+  } catch (error) {
+    if (error.name == "SequelizeConnectionError") {
+      errors.push("Near Indexer is too busy and can't provide data");
+    } else {
+      errors.push(JSON.stringify(error));
+    }
+    return { tx: txList, errors };
+  }
+}
+
 export async function nearTxByHash(hash) {
   let tx = {};
   let errors = [];

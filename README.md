@@ -14,6 +14,21 @@ npm run dev
 yarn dev
 ```
 
+## API docs
+
+Base URL: `https://rainbow-bridge-explorer.vercel.app/api`
+
+Based off Stripe's API format
+
+`/transactions/[hash]`
+Get a single bridge transaction by hash
+
+`/transactions?address=[address]`
+Get bridge transactions for a given address
+
+`/transactions/recent`
+Get recent bridge transactions across all chains (in development)
+
 ## Project Sustainability
 
 ### Upgrading / changing the bridge contracts

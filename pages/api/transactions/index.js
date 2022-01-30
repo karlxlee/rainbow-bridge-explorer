@@ -20,6 +20,7 @@ export async function transactions(address, from) {
     let allErrors = [];
     console.log(addressType);
     for (let type of addressType) {
+      console.log(type);
       const queryRoute = routes.filter((entry) => entry.from == type)[0]
         .useQuery;
       const { tx, errors } = await queryRoute(address);
