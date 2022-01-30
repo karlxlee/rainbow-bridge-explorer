@@ -72,16 +72,25 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const tokens = await fetchBridgeTokenList();
   // Get the paths we want to pre-render based on posts
-  const paths = tokens.map((entry) => {
-    return {
-      params: {
-        symbol: entry.symbol,
-      },
-    };
-  });
+  // const paths = tokens.map((entry) => {
+  //   return {
+  //     params: {
+  //       symbol: entry.symbol,
+  //     },
+  //   };
+  // });
 
   // We'll pre-render only these paths at build time.
   // { fallback: blocking } will server-render pages
   // on-demand if the path doesn't exist.
-  return { paths, fallback: "blocking" };
+  return {
+    paths: [
+      {
+        params: {
+          symbol: "USDT",
+        },
+      },
+    ],
+    fallback: "blocking",
+  };
 }
