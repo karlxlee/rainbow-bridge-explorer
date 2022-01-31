@@ -38,7 +38,9 @@ export default function Home(props) {
           </Heading>
           <Stack>
             {props.tx.ethereum &&
-              props.tx.ethereum.map((tx) => <TxCard key={tx.hash} {...tx} />)}
+              props.tx.ethereum.map((tx) => (
+                <TxCard key={tx.hash} clickable={true} {...tx} />
+              ))}
           </Stack>
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
@@ -47,7 +49,9 @@ export default function Home(props) {
           </Heading>
           <Stack>
             {props.tx.aurora &&
-              props.tx.aurora.map((tx) => <TxCard key={tx.hash} {...tx} />)}
+              props.tx.aurora.map((tx) => (
+                <TxCard key={tx.hash} clickable={true} {...tx} />
+              ))}
           </Stack>
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
