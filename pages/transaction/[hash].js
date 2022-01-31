@@ -229,6 +229,5 @@ export async function getServerSideProps({ params }) {
       tx,
       errors,
     },
-    revalidate: 30,
   };
 }
