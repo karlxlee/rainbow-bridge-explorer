@@ -87,7 +87,7 @@ export default function Transaction(props) {
           <Box p={6} borderWidth={1} borderRadius="md">
             <Text fontWeight={"bold"}>To</Text>
             <Flex alignItems="center">
-              <Link href={"/address/" + props.tx.sender}>
+              <Link href={"/address/" + props.tx.recipient}>
                 <a>
                   <Text as={"u"} mr={2}>
                     {props.tx.recipient}
