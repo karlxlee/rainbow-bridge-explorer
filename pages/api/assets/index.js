@@ -1,4 +1,4 @@
-const fetchBridgeTokenList = async () => {
+export async function fetchBridgeTokenList() {
   const tokensFolder =
     "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens";
   const tokensList = await fetch(
@@ -34,6 +34,27 @@ const fetchBridgeTokenList = async () => {
   const tokens = jsonRes.map((entry) => entry.value);
   console.log(tokens);
   return tokens;
-};
+}
 
-export default fetchBridgeTokenList;
+export default async function handler(req, res) {
+  const { method } = req;
+  switch (method) {
+    case "GET":
+      // Get data from your database
+      try {
+        const tokens = await fetchBridgeTokenList();
+        res.status(200).json({
+          object: "list",
+          data: tokens,
+          errors: [],
+        });
+      } catch (error) {
+        res.status(500).json({ errors: ["Failed to load data: " + error] });
+      }
+      break;
+
+    default:
+      res.setHeader("Allow", ["GET"]);
+      res.status(405).end(`Method ${method} Not Allowed`);
+  }
+}

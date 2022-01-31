@@ -3,7 +3,8 @@ import Page from "@/components/Page";
 import Link from "next/link";
 import ChakraNextImage from "@/components/ChakraNextImage";
 import ChainTag from "@/components/ChainTag";
-import fetchBridgeTokenList from "@/utils/fetchBridgeTokenList";
+import { token } from "@/api/assets/[symbol].js";
+
 import { Box, Text, Heading, Stack, Flex } from "@chakra-ui/react";
 
 export default function Asset({ token }) {
@@ -63,30 +64,9 @@ export default function Asset({ token }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const tokensFolder =
-    "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens";
-
-  const tokens = await fetchBridgeTokenList();
-  const findPath = tokens.filter(
-    (entry) => entry.symbol.toLowerCase() == params.symbol.toLowerCase()
-  );
-
-  let token = {};
-  if (findPath.length) {
-    try {
-      let path = findPath[0].path;
-      token = await fetch(tokensFolder + "/" + path).then((r) => r.json());
-      token["symbol"] = path.includes("testnet")
-        ? token["symbol"] + "_testnet"
-        : token["symbol"];
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   return {
     props: {
-      token,
+      token: await token(params.symbol),
     }, // will be passed to the page component as props
     // revalidate: 60,
   };

@@ -6,7 +6,7 @@ import AssetCard from "@/components/AssetCard";
 import { Grid, GridItem, Stack, Heading } from "@chakra-ui/react";
 
 import { recent } from "@/api/transactions/recent";
-import fetchBridgeTokenList from "@/utils/fetchBridgeTokenList";
+import { fetchBridgeTokenList } from "@/api/assets/index.js";
 
 export default function Home(props) {
   return (
@@ -81,6 +81,6 @@ export async function getStaticProps() {
       errors,
       tokens: shuffledTokens.slice(0, 10),
     }, // will be passed to the page component as props
-    revalidate: 30,
+    revalidate: 60,
   };
 }

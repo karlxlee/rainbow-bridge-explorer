@@ -2,7 +2,7 @@ import Head from "next/head";
 import Page from "@/components/Page";
 import AssetCard from "@/components/AssetCard";
 import { Box, Text, Grid, GridItem } from "@chakra-ui/react";
-import fetchBridgeTokenList from "@/utils/fetchBridgeTokenList";
+import { fetchBridgeTokenList } from "@/api/assets/index.js";
 
 export default function Assets(props) {
   return (
