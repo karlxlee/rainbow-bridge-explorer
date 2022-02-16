@@ -1,4 +1,5 @@
 export async function fetchBridgeTokenList() {
+  console.log("calling fetchBridgeTokenList()");
   const tokensFolder =
     "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens";
   const tokensList = await fetch(
@@ -32,7 +33,6 @@ export async function fetchBridgeTokenList() {
     r.filter(async (entry) => entry.status == "fulfilled")
   );
   const tokens = jsonRes.map((entry) => entry.value);
-  console.log(tokens);
   return tokens;
 }
 

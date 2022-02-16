@@ -34,14 +34,32 @@ function TxList({ chain }) {
     );
 
   // render data
-  return (
-    <Stack>
-      {data.tx[chain] &&
-        data.tx[chain].map((tx) => (
-          <TxCard key={tx.hash} clickable={true} {...tx} />
+  if (data.tx) {
+    return (
+      <Stack>
+        {data.tx[chain] &&
+          data.tx[chain].map((tx) => (
+            <TxCard key={tx.hash} clickable={true} {...tx} />
+          ))}
+      </Stack>
+    );
+  } else {
+    return (
+      <Stack>
+        {[...Array(10).keys()].map((key) => (
+          <Skeleton
+            key={key}
+            p={6}
+            borderWidth={1}
+            borderRadius="md"
+            display="flex"
+            flexWrap="wrap"
+            alignItems="center"
+          ></Skeleton>
         ))}
-    </Stack>
-  );
+      </Stack>
+    );
+  }
 }
 
 export default function Home({ fallback, ...props }) {

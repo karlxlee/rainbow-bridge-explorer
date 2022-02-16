@@ -1167,6 +1167,11 @@
   resolved "https://registry.yarnpkg.com/@fontsource/inter/-/inter-4.5.1.tgz#058d8a02354f3c78e369d452c15d33557ec1b705"
   integrity sha512-mvtOvXNNVLlF1p/UbLgLrmz2RCOl6Ow+TqyiK10SosoLKX7edsXYiHFHb7XIZdjII6F2sJVPPsJXWhBnbXT2DQ==
 
+"@fontsource/manrope@^4.5.4":
+  version "4.5.4"
+  resolved "https://registry.yarnpkg.com/@fontsource/manrope/-/manrope-4.5.4.tgz#d43540bf02659f3db76382cbfc596e084491ce20"
+  integrity sha512-1yv/1wW3x3wOKNYfuWMQORpKflAqiSRWc5rG+LLalRJJhED9sUDvk/FYBnKtT9IXCJ/VuL//bz2+i+Z+rtjlbg==
+
 "@hapi/accept@5.0.2":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@hapi/accept/-/accept-5.0.2.tgz#ab7043b037e68b722f93f376afb05e85c0699523"

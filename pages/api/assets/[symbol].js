@@ -6,11 +6,12 @@ export async function token(symbol) {
 
   const tokens = await fetchBridgeTokenList();
   const findPath = tokens.filter(
-    (entry) => entry.symbol.toLowerCase() == symbol.toLowerCase()
+    (entry) => entry && entry.symbol.toLowerCase() == symbol.toLowerCase()
   );
-
+  console.log("findpath is " + JSON.stringify(findPath));
   let token = {};
   if (findPath.length) {
+    console.log(findPath.length);
     try {
       let path = findPath[0].path;
       token = await fetch(tokensFolder + "/" + path).then((r) => r.json());
@@ -20,6 +21,8 @@ export async function token(symbol) {
     } catch (error) {
       console.log(error);
     }
+  } else {
+    console.log("Can't find the token in the list");
   }
   return token;
 }
@@ -29,6 +32,7 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       try {
+        console.log(query.symbol);
         const tokenData = await token(query.symbol);
         res.status(200).json({
           object: "asset",
