@@ -29,20 +29,13 @@ import {
 } from "@chakra-ui/react";
 
 import Link from "next/link";
-
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-
 import ClipboardButton from "@/components/ClipboardButton";
 import ChainTag from "@/components/ChainTag";
 
-import useSWR, { SWRConfig } from "swr";
-
-const chainExplorers = {
-  near: "https://explorer.near.org/transactions/",
-  ethereum: "https://etherscan.io/tx/",
-  aurora: "https://explorer.mainnet.aurora.dev/tx/",
-};
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+import useSWR from "swr";
+import chainExplorers from "@/config/chainExplorers.json";
+import fetcher from "@/utils/fetcher";
 
 export default function Transaction(props) {
   const { error, data } = useSWR("/api/transactions/" + props.hash, fetcher);

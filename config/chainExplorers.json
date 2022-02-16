@@ -1,0 +1,5 @@
+{
+  "near": "https://explorer.near.org/transactions/",
+  "ethereum": "https://etherscan.io/tx/",
+  "aurora": "https://explorer.mainnet.aurora.dev/tx/"
+}
