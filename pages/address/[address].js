@@ -17,11 +17,22 @@ import {
   AlertDescription,
   Wrap,
   WrapItem,
+  Skeleton,
 } from "@chakra-ui/react";
-import { transactions } from "@/api/transactions/index";
+// import { transactions } from "@/api/transactions/index";
 import ClipboardButton from "@/components/ClipboardButton";
+import useSWR, { SWRConfig } from "swr";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Address(props) {
+  const { error, data } = useSWR(
+    "/api/transactions?address=" + props.address,
+    fetcher
+  );
+  if (error) return <div>failed to load</div>;
+  if (!data) return <Skeleton height="20em" />;
+
   return (
     <Page>
       <Head>
@@ -37,9 +48,9 @@ export default function Address(props) {
           <ClipboardButton text={props.address} />
         </WrapItem>
       </Wrap>
-      {props.errors.length && (
+      {/* {error.length && (
         <VStack>
-          {props.errors.map((error) => (
+          {error.map((error) => (
             <Alert key={error} status="error">
               <AlertIcon />
               <AlertTitle mr={2}>{error}</AlertTitle>
@@ -49,37 +60,37 @@ export default function Address(props) {
             </Alert>
           ))}
         </VStack>
-      )}
+      )} */}
 
-      {props.tx.map((tx) => (
+      {data.data.map((tx) => (
         <TxCard key={tx.hash} {...tx} showHash={true} />
       ))}
     </Page>
   );
 }
 
-export async function getStaticProps({ params }) {
-  const { tx, errors } = await transactions(params.address);
+export async function getServerSideProps({ params }) {
+  // const { tx, errors } = await transactions(params.address);
   return {
     props: {
       address: params.address,
-      tx,
-      errors,
+      // tx,
+      // errors,
     }, // will be passed to the page component as props
-    revalidate: 60,
+    // revalidate: 60,
   };
 }
 
-export async function getStaticPaths() {
-  // Get the paths we want to pre-render based on posts
-  const paths = [
-    {
-      params: { address: "0xbC042F45f9eBfF86fCaAd0869cA169Dc671C0826" },
-    },
-  ];
+// export async function getStaticPaths() {
+//   // Get the paths we want to pre-render based on posts
+//   const paths = [
+//     {
+//       params: { address: "0xbC042F45f9eBfF86fCaAd0869cA169Dc671C0826" },
+//     },
+//   ];
 
-  // We'll pre-render only these paths at build time.
-  // { fallback: blocking } will server-render pages
-  // on-demand if the path doesn't exist.
-  return { paths, fallback: "blocking" };
-}
+//   // We'll pre-render only these paths at build time.
+//   // { fallback: blocking } will server-render pages
+//   // on-demand if the path doesn't exist.
+//   return { paths, fallback: "blocking" };
+// }

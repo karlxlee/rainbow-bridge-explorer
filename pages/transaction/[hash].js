@@ -1,6 +1,6 @@
 import Page from "@/components/Page";
 import TxCard from "@/components/TxCard";
-import { transaction } from "@/api/transactions/[hash].js";
+// import { transaction } from "@/api/transactions/[hash].js";
 import {
   Heading,
   Text,
@@ -25,6 +25,7 @@ import {
   Td,
   TableCaption,
   Spacer,
+  Skeleton,
 } from "@chakra-ui/react";
 
 import Link from "next/link";
@@ -34,117 +35,126 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import ClipboardButton from "@/components/ClipboardButton";
 import ChainTag from "@/components/ChainTag";
 
+import useSWR, { SWRConfig } from "swr";
+
 const chainExplorers = {
   near: "https://explorer.near.org/transactions/",
   ethereum: "https://etherscan.io/tx/",
   aurora: "https://explorer.mainnet.aurora.dev/tx/",
 };
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Transaction(props) {
+  const { error, data } = useSWR("/api/transactions/" + props.hash, fetcher);
+  if (error) return <div>failed to load</div>;
+  if (!data) return <Skeleton height="20em" />;
+
   return (
     <Page>
       <Heading>Transaction</Heading>
       <Wrap align="center">
         <WrapItem>
-          <Text mr={2}>{props.tx.hash}</Text>
+          <Text mr={2}>{props.hash}</Text>
         </WrapItem>
         <WrapItem>
-          <ClipboardButton text={props.tx.hash} />
+          <ClipboardButton text={props.hash} />
         </WrapItem>
         <Spacer />
         <WrapItem>
           <Flex alignItems="center">
             <a
               target="_blank"
-              href={chainExplorers[props.tx.origin] + props.tx.hash}
+              href={chainExplorers[data.data.origin] + data.data.hash}
               rel="noreferrer"
             >
-              View on {props.tx.origin} explorer
+              View on {data.data.origin} explorer
               <ExternalLinkIcon ml={1} />
             </a>
           </Flex>
         </WrapItem>
       </Wrap>
-      <TxCard {...props.tx} showDateTime={true} />
+      <TxCard {...data.data} showDateTime={true} />
       <Grid templateColumns="repeat(2, 1fr)" gap={{ sm: 0, md: 3, lg: 3 }}>
         <GridItem colSpan={{ sm: 2, md: 1, lg: 1 }}>
           <Box p={6} borderWidth={1} borderRadius="md">
             <Text fontWeight={"bold"}>From</Text>
             <Flex alignItems="center">
-              <Link href={"/address/" + props.tx.sender}>
+              <Link href={"/address/" + data.data.sender}>
                 <a>
                   <Text as={"u"} mr={2}>
-                    {props.tx.sender}
+                    {data.data.sender}
                   </Text>
                 </a>
               </Link>
-              <ClipboardButton text={props.tx.sender} />
+              <ClipboardButton text={data.data.sender} />
             </Flex>
-            <ChainTag chain={props.tx.origin} />
+            <ChainTag chain={data.data.origin} />
           </Box>
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 1, lg: 1 }}>
           <Box p={6} borderWidth={1} borderRadius="md">
             <Text fontWeight={"bold"}>To</Text>
             <Flex alignItems="center">
-              <Link href={"/address/" + props.tx.recipient}>
+              <Link href={"/address/" + data.data.recipient}>
                 <a>
                   <Text as={"u"} mr={2}>
-                    {props.tx.recipient}
+                    {data.data.recipient}
                   </Text>
                 </a>
               </Link>
-              <ClipboardButton text={props.tx.recipient} />
+              <ClipboardButton text={data.data.recipient} />
             </Flex>
-            <ChainTag chain={props.tx.destination} />
+            <ChainTag chain={data.data.destination} />
           </Box>
         </GridItem>
       </Grid>
       <Box borderWidth={1} borderRadius="md">
         <Wrap>
-          {props.tx.blockNumber && (
+          {data.data.blockNumber && (
             <WrapItem p={6} borderRightWidth={1}>
               <Stat>
                 <StatLabel>Block number</StatLabel>
-                <StatNumber>{props.tx.blockNumber}</StatNumber>
+                <StatNumber>{data.data.blockNumber}</StatNumber>
               </Stat>
             </WrapItem>
           )}
-          {props.tx.blockHash && (
+          {data.data.blockHash && (
             <WrapItem p={6} borderRightWidth={1}>
               <Stat>
                 <StatLabel>Block hash</StatLabel>
-                <StatNumber>{props.tx.blockHash}</StatNumber>
+                <StatNumber>{data.data.blockHash}</StatNumber>
               </Stat>
             </WrapItem>
           )}
-          {props.tx.confirmations && (
+          {data.data.confirmations && (
             <WrapItem p={6} borderRightWidth={1}>
               <Stat>
                 <StatLabel>Confirmations</StatLabel>
-                <StatNumber>{props.tx.confirmations}</StatNumber>
+                <StatNumber>{data.data.confirmations}</StatNumber>
               </Stat>
             </WrapItem>
           )}
-          {props.tx.gasUsed && (
+          {data.data.gasUsed && (
             <WrapItem p={6} borderRightWidth={1}>
               <Stat>
                 <StatLabel>Transaction fee</StatLabel>
-                <StatNumber>{props.tx.gasUsed}</StatNumber>
-                <StatHelpText>{"Gas Price: " + props.tx.gasPrice}</StatHelpText>
+                <StatNumber>{data.data.gasUsed}</StatNumber>
+                <StatHelpText>
+                  {"Gas Price: " + data.data.gasPrice}
+                </StatHelpText>
               </Stat>
             </WrapItem>
           )}
         </Wrap>
       </Box>
-      {(props.tx.logs || props.tx.args) && (
+      {(data.data.logs || data.data.args) && (
         <Box py={5}>
           <Heading my={4} fontSize={"sm"}>
             Transaction logs
           </Heading>
           <Stack spacing={4}>
-            {props.tx.logs &&
-              props.tx.logs.map((log) => (
+            {data.data.logs &&
+              data.data.logs.map((log) => (
                 <Box
                   key={log.address}
                   w={"100%"}
@@ -184,29 +194,29 @@ export default function Transaction(props) {
                   </Table>
                 </Box>
               ))}
-            {props.tx.args && (
+            {data.data.args && (
               <Box w={"100%"} borderWidth={1} borderRadius="md">
                 <Table variant="simple">
                   <Tbody>
-                    {Object.keys(props.tx.args).map((key) => {
+                    {Object.keys(data.data.args).map((key) => {
                       if (key != "args_json") {
                         return (
                           <Tr>
                             <Td>{key}</Td>
                             <Td>
-                              <Code>{props.tx.args[key]}</Code>
+                              <Code>{data.data.args[key]}</Code>
                             </Td>
                           </Tr>
                         );
                       }
                     })}
 
-                    {props.tx.args.args_json &&
-                      Object.keys(props.tx.args.args_json).map((key, i) => (
+                    {data.data.args.args_json &&
+                      Object.keys(data.data.args.args_json).map((key, i) => (
                         <Tr key={key}>
                           <Td>{i == 0 && "args_json"}</Td>
                           <Td>
-                            {key}: <Code>{props.tx.args.args_json[key]}</Code>
+                            {key}: <Code>{data.data.args.args_json[key]}</Code>
                           </Td>
                         </Tr>
                       ))}
@@ -222,12 +232,12 @@ export default function Transaction(props) {
 }
 
 export async function getServerSideProps({ params }) {
-  const { tx, errors } = await transaction(params.hash);
+  // const { tx, errors } = await transaction(params.hash);
   return {
     props: {
       hash: params.hash,
-      tx,
-      errors,
+      // tx,
+      // errors,
     },
   };
 }

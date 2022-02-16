@@ -14,20 +14,27 @@ npm run dev
 yarn dev
 ```
 
-## API docs
+## Rainbow Bridge Data API
+
+Rainbow Bridge Explorer ships with API endpoints, allowing allow anyone to fetch Rainbow bridge transaction data.
+
+With just one REST API, you can fetch bridge transactions originating from NEAR, Aurora, and Ethereum.
+
+Query by address or transaction hash from any of these chains - Rainbow Bridge Explorer's API will **auto-detect which chain it originates from**.
+
+`/transactions`: Fetch transactions by user address
+
+`/transactions/[hash]`: Fetch transactions by hash
+
+`/transactions/recent`: Fetch recent transactions
+
+`/assets`: Fetch the most up-to-date list of Rainbow Bridge supported assets (pulls data from the `aurora-is-near/bridge-assets` repo)
+
+`/assets/[symbol]`: Fetch asset metadata by symbol
+
+Try out the API and see the full docs: https://app.swaggerhub.com/apis-docs/karlxlee/rainbow-bridge-explorer/1.0.0
 
 Base URL: `https://rainbow-bridge-explorer.vercel.app/api`
-
-Based off Stripe's API format
-
-`/transactions/[hash]`
-Get a single bridge transaction by hash
-
-`/transactions?address=[address]`
-Get bridge transactions for a given address
-
-`/transactions/recent`
-Get recent bridge transactions across all chains (in development)
 
 ## Project Sustainability
 

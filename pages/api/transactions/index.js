@@ -35,6 +35,7 @@ export async function transactions(address, from) {
 
 export default async function handler(req, res) {
   const { query, method } = req;
+  console.log(query);
   switch (method) {
     case "GET":
       // Get data from your database

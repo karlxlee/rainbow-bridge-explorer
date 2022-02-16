@@ -3,12 +3,48 @@ import Page from "@/components/Page";
 import Hero from "@/components/Hero";
 import TxCard from "@/components/TxCard";
 import AssetCard from "@/components/AssetCard";
-import { Grid, GridItem, Stack, Heading } from "@chakra-ui/react";
+import { Grid, GridItem, Stack, Heading, Skeleton } from "@chakra-ui/react";
 
 import { recent } from "@/api/transactions/recent";
 import { fetchBridgeTokenList } from "@/api/assets/index.js";
 
-export default function Home(props) {
+import useSWR, { SWRConfig } from "swr";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+function TxList({ chain }) {
+  const { data, error } = useSWR("/api/transactions/recent", fetcher);
+
+  if (error) return <div>failed to load</div>;
+  if (!data)
+    return (
+      <Stack>
+        {[...Array(10).keys()].map((key) => (
+          <Skeleton
+            key={key}
+            p={6}
+            borderWidth={1}
+            borderRadius="md"
+            display="flex"
+            flexWrap="wrap"
+            alignItems="center"
+          ></Skeleton>
+        ))}
+      </Stack>
+    );
+
+  // render data
+  return (
+    <Stack>
+      {data.tx[chain] &&
+        data.tx[chain].map((tx) => (
+          <TxCard key={tx.hash} clickable={true} {...tx} />
+        ))}
+    </Stack>
+  );
+}
+
+export default function Home({ fallback, ...props }) {
   return (
     <Page>
       <Head>
@@ -25,34 +61,25 @@ export default function Home(props) {
           <Heading py={8} as="h3" size="md">
             Recent transactions from NEAR
           </Heading>
-          <Stack>
-            {props.tx.near &&
-              props.tx.near.map((tx) => (
-                <TxCard key={tx.hash} clickable={true} {...tx} />
-              ))}
-          </Stack>
+          <SWRConfig value={{ fallback }}>
+            <TxList chain="near" />
+          </SWRConfig>
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
           <Heading py={8} as="h3" size="md">
             Recent transactions from Ethereum
           </Heading>
-          <Stack>
-            {props.tx.ethereum &&
-              props.tx.ethereum.map((tx) => (
-                <TxCard key={tx.hash} clickable={true} {...tx} />
-              ))}
-          </Stack>
+          <SWRConfig value={{ fallback }}>
+            <TxList chain="ethereum" />{" "}
+          </SWRConfig>
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
           <Heading py={8} as="h3" size="md">
             Recent transactions from Aurora
           </Heading>
-          <Stack>
-            {props.tx.aurora &&
-              props.tx.aurora.map((tx) => (
-                <TxCard key={tx.hash} clickable={true} {...tx} />
-              ))}
-          </Stack>
+          <SWRConfig value={{ fallback }}>
+            <TxList chain="aurora" />
+          </SWRConfig>
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
           <Heading py={8} as="h3" size="md">
@@ -77,9 +104,12 @@ export async function getStaticProps() {
 
   return {
     props: {
-      tx,
-      errors,
+      // tx,
+      // errors,
       tokens: shuffledTokens.slice(0, 10),
+      fallback: {
+        "/api/transactions/recent": { tx, errors },
+      },
     }, // will be passed to the page component as props
     revalidate: 60,
   };

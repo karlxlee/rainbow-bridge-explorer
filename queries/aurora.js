@@ -64,7 +64,6 @@ async function labelTransactions(transactions) {
           `https://explorer.mainnet.aurora.dev/api?module=transaction&action=gettxinfo&txhash=` +
             tx.hash
         ).then((r) => r.json());
-
         if (logsRes.message == "OK" && logsRes.result.logs) {
           txList.push({ ...tx, logs: logsRes.result.logs });
         } else {
@@ -159,6 +158,7 @@ async function labelTransactions(transactions) {
     errors.push(JSON.stringify(error));
   }
   finalTx.sort((a, b) => b.blockNumber - a.blockNumber);
+  console.log("finaltx sorted");
   return { tx: finalTx, errors: errors };
 }
 
@@ -225,19 +225,24 @@ export async function auroraRecentTx() {
 
   let ethToNearTx = await auroraTxByAddress(
     addresses["aurora"]["eth"]["toNear"],
-    5
+    2
   );
+  console.log("ethtonear " + ethToNearTx.tx.length);
   let ethToEthereumTx = await auroraTxByAddress(
     addresses["aurora"]["eth"]["toEthereum"],
-    5
+    2
   );
+  console.log("ethtoeth " + ethToEthereumTx.tx.length);
 
-  let tokenTx = await auroraTxByAddress(
-    addresses["aurora"]["erc20"]["burn"],
-    10
-  );
-  txList = [...ethToNearTx.tx, ...ethToEthereumTx.tx, ...tokenTx.tx];
+  // let tokenTx = await auroraTxByAddress(
+  //   addresses["aurora"]["erc20"]["burn"],
+  //   2
+  // );
+  // console.log("token " + tokenTx.tx.length);
+  txList = [...ethToNearTx.tx, ...ethToEthereumTx.tx];
+  // txList = [...ethToNearTx.tx, ...ethToEthereumTx.tx, ...tokenTx.tx];
   txList.sort((a, b) => b.blockNumber - a.blockNumber);
+  console.log("aur txList " + txList.length);
   return {
     tx: txList,
     errors,
