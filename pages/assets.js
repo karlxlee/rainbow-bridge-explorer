@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Page from "@/components/Page";
 import AssetCard from "@/components/AssetCard";
 import { Box, Text, Grid, GridItem } from "@chakra-ui/react";
@@ -6,10 +5,7 @@ import { fetchBridgeTokenList } from "@/api/assets/index.js";
 
 export default function Assets(props) {
   return (
-    <Page>
-      <Head>
-        <title>Rainbow Bridge Explorer: Assets</title>
-      </Head>
+    <Page title={"Assets"}>
       <Grid templateColumns="repeat(4, 1fr)" gap={2}>
         {props.tokens.map((token) => (
           <GridItem key={token.symbol} colSpan={{ sm: "2", md: "1", lg: "1" }}>

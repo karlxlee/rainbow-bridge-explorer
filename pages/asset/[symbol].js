@@ -5,54 +5,90 @@ import ChakraNextImage from "@/components/ChakraNextImage";
 import ChainTag from "@/components/ChainTag";
 import { token } from "@/api/assets/[symbol].js";
 
-import { Box, Text, Heading, Stack, Flex } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  Box,
+  Wrap,
+  WrapItem,
+  Text,
+  Heading,
+  Stack,
+  Flex,
+} from "@chakra-ui/react";
 
 export default function Asset({ token }) {
   console.log(token);
   return (
-    <Page>
+    <Page title={token.name + " (" + token.symbol + ")"}>
       {Object.keys(token).length && (
         <>
-          <Head>
-            <title>{"Rainbow Bridge Explorer - " + token.symbol}</title>
-          </Head>
-          <Box>
-            <Stack gap={2}>
-              <Heading>Asset</Heading>
-              <Text>{token.name + " (" + token.symbol + ")"}</Text>
-              {token.svgPath && (
-                <ChakraNextImage
-                  width={20}
-                  height={20}
-                  src={
-                    "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens" +
-                    "/" +
-                    token.svgPath.toLowerCase()
-                  }
-                />
-              )}
-            </Stack>
-            <Stack mt={6} gap={2}>
-              {token.ethereum_address && (
-                <Flex align="center">
-                  <ChainTag chain={"ethereum"} />
-                  <Text ml={2}>{token.ethereum_address}</Text>
-                </Flex>
-              )}
-              {token.aurora_address && (
-                <Flex align="center">
-                  <ChainTag chain={"aurora"} />
-                  <Text ml={2}>{token.aurora_address}</Text>
-                </Flex>
-              )}
-              {token.near_address && (
-                <Flex align="center">
-                  <ChainTag chain={"near"} />
-                  <Text ml={2}>{token.near_address}</Text>
-                </Flex>
-              )}
-            </Stack>
-          </Box>
+          <Grid templateColumns={"repeat(5, 1fr)"} gap={2}>
+            <GridItem colSpan={{ sm: 5, md: 5, lg: 2 }}>
+              <Stack gap={2} align="center" p={6} py={20} borderWidth={1}>
+                {token.svgPath && (
+                  <ChakraNextImage
+                    width={20}
+                    height={20}
+                    src={
+                      "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens" +
+                      "/" +
+                      token.svgPath.toLowerCase()
+                    }
+                  />
+                )}
+                <Heading>Asset</Heading>
+                <Text>{token.name + " (" + token.symbol + ")"}</Text>
+              </Stack>
+            </GridItem>
+            <GridItem colSpan={{ sm: 5, md: 5, lg: 3 }}>
+              <Stack gap={4} borderWidth={1} p={6}>
+                <Heading as="h3" size="sm">
+                  Token decimals
+                </Heading>
+                <Text>{token.decimals}</Text>
+                <Heading as="h3" size="sm">
+                  Token addresses
+                </Heading>
+                {token.ethereum_address && (
+                  <Wrap align="center">
+                    <WrapItem mr={2}>
+                      <ChainTag chain={"ethereum"} />
+                    </WrapItem>
+                    <WrapItem>
+                      <Text wordBreak="break-word">
+                        {token.ethereum_address}
+                      </Text>
+                    </WrapItem>
+                  </Wrap>
+                )}
+                {token.aurora_address && (
+                  <Wrap align="center">
+                    <WrapItem mr={2}>
+                      <ChainTag chain={"aurora"} />{" "}
+                    </WrapItem>
+                    <WrapItem>
+                      <Text ml={2} wordBreak="break-word">
+                        {token.aurora_address}
+                      </Text>
+                    </WrapItem>
+                  </Wrap>
+                )}
+                {token.near_address && (
+                  <Wrap align="center">
+                    <WrapItem mr={2}>
+                      <ChainTag chain={"near"} />{" "}
+                    </WrapItem>
+                    <WrapItem>
+                      <Text ml={2} wordBreak="break-word">
+                        {token.near_address}
+                      </Text>
+                    </WrapItem>
+                  </Wrap>
+                )}
+              </Stack>
+            </GridItem>
+          </Grid>
         </>
       )}
       {!Object.keys(token).length && (

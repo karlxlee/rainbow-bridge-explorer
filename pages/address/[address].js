@@ -34,12 +34,7 @@ export default function Address(props) {
   if (!data) return <Skeleton height="20em" />;
 
   return (
-    <Page>
-      <Head>
-        <title>Rainbow Bridge Explorer</title>
-
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Page title={"Address: " + props.address}>
       <Heading>Address</Heading>
       <Wrap align="center">
         <WrapItem>

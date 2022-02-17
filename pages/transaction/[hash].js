@@ -40,7 +40,7 @@ export default function Transaction(props) {
   if (!data) return <Skeleton height="20em" />;
 
   return (
-    <Page>
+    <Page title={"Transaction: " + props.hash}>
       <Heading>Transaction</Heading>
       <Wrap align="center">
         <WrapItem>
@@ -56,10 +56,10 @@ export default function Transaction(props) {
           <Flex alignItems="center">
             <a
               target="_blank"
-              href={chainExplorers[data.data.origin] + data.data.hash}
+              href={chainExplorers[data.data.origin]["url"] + data.data.hash}
               rel="noreferrer"
             >
-              View on {data.data.origin} explorer
+              View on {chainExplorers[data.data.origin]["name"]}
               <ExternalLinkIcon ml={1} />
             </a>
           </Flex>
@@ -198,7 +198,9 @@ export default function Transaction(props) {
                           <Tr>
                             <Td>{key}</Td>
                             <Td>
-                              <Code>{data.data.args[key]}</Code>
+                              <Code wordBreak="break-word">
+                                {data.data.args[key]}
+                              </Code>
                             </Td>
                           </Tr>
                         );
@@ -209,7 +211,7 @@ export default function Transaction(props) {
                       Object.keys(data.data.args.args_json).map((key, i) => (
                         <Tr key={key}>
                           <Td>{i == 0 && "args_json"}</Td>
-                          <Td>
+                          <Td wordBreak="break-word">
                             {key}: <Code>{data.data.args.args_json[key]}</Code>
                           </Td>
                         </Tr>

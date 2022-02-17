@@ -9,11 +9,13 @@ import { recent } from "@/api/transactions/recent";
 import { fetchBridgeTokenList } from "@/api/assets/index.js";
 
 import useSWR, { SWRConfig } from "swr";
+import { useSWRConfig } from "swr";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function TxList({ chain }) {
   const { data, error } = useSWR("/api/transactions/recent", fetcher);
+  const { mutate } = useSWRConfig();
 
   if (error) return <div>failed to load</div>;
   if (!data)
@@ -44,12 +46,14 @@ function TxList({ chain }) {
       </Stack>
     );
   } else {
+    mutate("/api/transactions/recent");
+
     return (
       <Stack>
         {[...Array(10).keys()].map((key) => (
           <Skeleton
             key={key}
-            p={6}
+            p={10}
             borderWidth={1}
             borderRadius="md"
             display="flex"
@@ -65,14 +69,6 @@ function TxList({ chain }) {
 export default function Home({ fallback, ...props }) {
   return (
     <Page>
-      <Head>
-        <title>Rainbow Bridge Explorer</title>
-        <meta
-          name="description"
-          content="Explore your activity on Rainbow Bridge"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Hero />
       <Grid templateColumns={"repeat(2, 1fr)"} gap={2}>
         <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>

@@ -1,5 +1,11 @@
 {
-  "near": "https://explorer.near.org/transactions/",
-  "ethereum": "https://etherscan.io/tx/",
-  "aurora": "https://explorer.mainnet.aurora.dev/tx/"
+  "near": {
+    "name": "NEAR explorer",
+    "url": "https://explorer.near.org/transactions/"
+  },
+  "ethereum": { "name": "Etherscan", "url": "https://etherscan.io/tx/" },
+  "aurora": {
+    "name": "Aurora explorer",
+    "url": "https://explorer.mainnet.aurora.dev/tx/"
+  }
 }

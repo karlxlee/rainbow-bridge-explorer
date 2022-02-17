@@ -13,7 +13,9 @@ const Hero = () => {
       /> */}
       <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(2, 1fr)">
         <GridItem colSpan={{ sm: 2, md: 1, lg: 1 }}>
-          <Heading>Explore your activity on Rainbow Bridge</Heading>
+          <Heading fontWeight="bold">
+            Explore your activity on Rainbow Bridge
+          </Heading>
           <Box mt={10} />
           <SearchBar />
         </GridItem>

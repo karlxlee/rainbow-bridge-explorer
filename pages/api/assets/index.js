@@ -30,9 +30,10 @@ export async function fetchBridgeTokenList() {
       }))
   );
   const jsonRes = await Promise.allSettled(jsonFetches).then((r) =>
-    r.filter(async (entry) => entry.status == "fulfilled")
+    r.filter(async (entry) => entry.status == "fulfilled" && "value" in entry)
   );
-  const tokens = jsonRes.map((entry) => "value" in entry && entry.value);
+  const tokenValues = jsonRes.map((entry) => entry.value);
+  const tokens = tokenValues.filter((entry) => entry !== undefined);
   return tokens;
 }
 
