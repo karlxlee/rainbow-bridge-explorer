@@ -1,23 +1,27 @@
 import { fetchBridgeTokenList } from "@/api/assets/index.js";
 
 export async function token(symbol) {
-  const tokensFolder =
-    "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens";
-
   const tokens = await fetchBridgeTokenList();
   const findPath = tokens.filter(
     (entry) => entry && entry.symbol.toLowerCase() == symbol.toLowerCase()
   );
-  console.log("findpath is " + JSON.stringify(findPath));
   let token = {};
   if (findPath.length) {
-    console.log(findPath.length);
     try {
       let path = findPath[0].path;
-      token = await fetch(tokensFolder + "/" + path).then((r) => r.json());
+      let svgPath = findPath[0].svgPath;
+      console.log(svgPath);
+      token = await fetch(
+        "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens" +
+          "/" +
+          path
+      ).then((r) => r.json());
       token["symbol"] = path.includes("testnet")
         ? token["symbol"] + "_testnet"
         : token["symbol"];
+      if (svgPath.length) {
+        token["svgPath"] = svgPath;
+      }
     } catch (error) {
       console.log(error);
     }

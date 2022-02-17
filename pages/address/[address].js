@@ -40,9 +40,12 @@ export default function Address(props) {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Wrap>
+      <Heading>Address</Heading>
+      <Wrap align="center">
         <WrapItem>
-          <Heading>{props.address}</Heading>
+          <Text mr={2} wordBreak="break-word">
+            {props.address}
+          </Text>
         </WrapItem>
         <WrapItem>
           <ClipboardButton text={props.address} />

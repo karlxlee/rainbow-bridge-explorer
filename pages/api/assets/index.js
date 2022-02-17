@@ -32,7 +32,6 @@ export async function fetchBridgeTokenList() {
   const jsonRes = await Promise.allSettled(jsonFetches).then((r) =>
     r.filter(async (entry) => entry.status == "fulfilled")
   );
-  console.log(jsonRes);
   const tokens = jsonRes.map((entry) => "value" in entry && entry.value);
   return tokens;
 }

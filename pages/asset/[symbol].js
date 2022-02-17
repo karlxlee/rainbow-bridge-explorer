@@ -8,6 +8,7 @@ import { token } from "@/api/assets/[symbol].js";
 import { Box, Text, Heading, Stack, Flex } from "@chakra-ui/react";
 
 export default function Asset({ token }) {
+  console.log(token);
   return (
     <Page>
       {Object.keys(token).length && (
@@ -17,19 +18,19 @@ export default function Asset({ token }) {
           </Head>
           <Box>
             <Stack gap={2}>
-              <Heading>
-                {"Asset: " + token.name + " (" + token.symbol + ")"}
-              </Heading>
-              <ChakraNextImage
-                width={20}
-                height={20}
-                src={
-                  "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens" +
-                  "/" +
-                  token.symbol.toLowerCase() +
-                  ".svg"
-                }
-              />
+              <Heading>Asset</Heading>
+              <Text>{token.name + " (" + token.symbol + ")"}</Text>
+              {token.svgPath && (
+                <ChakraNextImage
+                  width={20}
+                  height={20}
+                  src={
+                    "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens" +
+                    "/" +
+                    token.svgPath.toLowerCase()
+                  }
+                />
+              )}
             </Stack>
             <Stack mt={6} gap={2}>
               {token.ethereum_address && (

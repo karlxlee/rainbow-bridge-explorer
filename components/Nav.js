@@ -35,7 +35,6 @@ const Nav = (props) => {
               display="flex"
               alignItems="center"
               justifyContent="center"
-              // width={{ base: "100%", md: "80px" }}
               mt={{ base: "1em", md: "0" }}
             >
               <ChakraNextImage
@@ -45,7 +44,9 @@ const Nav = (props) => {
                 height={10}
                 objectFit="contain"
               />
-              <Text pl={2}>Explorer</Text>
+              <Text fontWeight="bold" pl={1}>
+                Explorer
+              </Text>
               <Spacer />
             </Box>
           </a>

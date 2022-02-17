@@ -51,7 +51,7 @@ const TxCard = (props) => {
             <Spacer />
             <Link href={"/transaction/" + props.hash}>
               <a>
-                <Text>{props.hash.slice(0, 20) + "..."}</Text>
+                <Text as="u">{props.hash.slice(0, 20) + "..."}</Text>
               </a>
             </Link>
           </>

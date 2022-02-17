@@ -1,6 +1,5 @@
 import Page from "@/components/Page";
 import TxCard from "@/components/TxCard";
-// import { transaction } from "@/api/transactions/[hash].js";
 import {
   Heading,
   Text,
@@ -17,9 +16,7 @@ import {
   Stack,
   Code,
   Table,
-  Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -47,7 +44,9 @@ export default function Transaction(props) {
       <Heading>Transaction</Heading>
       <Wrap align="center">
         <WrapItem>
-          <Text mr={2}>{props.hash}</Text>
+          <Text mr={2} wordBreak="break-word">
+            {props.hash}
+          </Text>
         </WrapItem>
         <WrapItem>
           <ClipboardButton text={props.hash} />
@@ -74,7 +73,7 @@ export default function Transaction(props) {
             <Flex alignItems="center">
               <Link href={"/address/" + data.data.sender}>
                 <a>
-                  <Text as={"u"} mr={2}>
+                  <Text wordBreak="break-word" as={"u"} mr={2}>
                     {data.data.sender}
                   </Text>
                 </a>
@@ -90,7 +89,7 @@ export default function Transaction(props) {
             <Flex alignItems="center">
               <Link href={"/address/" + data.data.recipient}>
                 <a>
-                  <Text as={"u"} mr={2}>
+                  <Text wordBreak="break-word" as={"u"} mr={2}>
                     {data.data.recipient}
                   </Text>
                 </a>
@@ -115,7 +114,9 @@ export default function Transaction(props) {
             <WrapItem p={6} borderRightWidth={1}>
               <Stat>
                 <StatLabel>Block hash</StatLabel>
-                <StatNumber>{data.data.blockHash}</StatNumber>
+                <StatNumber wordBreak="break-word">
+                  {data.data.blockHash}
+                </StatNumber>
               </Stat>
             </WrapItem>
           )}
@@ -158,27 +159,27 @@ export default function Transaction(props) {
                     <Tbody>
                       <Tr>
                         <Td>Address</Td>
-                        <Td>
+                        <Td wordBreak="break-word">
                           <Code>{log.address}</Code>
                         </Td>
                       </Tr>
                       <Tr>
                         <Td>Data</Td>
-                        <Td>
+                        <Td wordBreak="break-word">
                           <Code>{log.data}</Code>
                         </Td>
                       </Tr>
                       <Tr>
                         <Td>Index</Td>
-                        <Td>
+                        <Td wordBreak="break-word">
                           <Code>{log.index}</Code>
                         </Td>
                       </Tr>
                       {log.topics &&
                         log.topics.map((topic, i) => (
                           <Tr key={topic}>
-                            <Td>{i == 0 && "Topics"}</Td>
-                            <Td>
+                            <Td wordBreak="break-word">{i == 0 && "Topics"}</Td>
+                            <Td wordBreak="break-word">
                               <Code>{topic}</Code>
                             </Td>
                           </Tr>
