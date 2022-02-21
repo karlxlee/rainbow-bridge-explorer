@@ -22,7 +22,7 @@ const Nav = (props) => {
   const pages = [["/assets", "Assets"]];
 
   return (
-    <Box p={4} mt={4}>
+    <Box p={4}>
       <Container
         display="flex"
         flexWrap="wrap"

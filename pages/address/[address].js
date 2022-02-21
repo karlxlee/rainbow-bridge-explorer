@@ -30,7 +30,7 @@ export default function Address(props) {
     "/api/transactions?address=" + props.address,
     fetcher
   );
-  if (error) return <div>failed to load</div>;
+  if (error) return <div>{"failed to load: " + JSON.stringify(error)}</div>;
   if (!data) return <Skeleton height="20em" />;
 
   return (

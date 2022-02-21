@@ -1,18 +1,22 @@
 # 🌈 Rainbow Bridge Explorer
 
+### Live demo: https://rainbow-bridge-explorer.vercel.app
+
 For the NEAR MetaBUILD Hackathon
 
 Rainbow Bridge Explorer is both a front-end and a public REST API for exploring bridge transactions between NEAR, Aurora, and Ethereum.
 
-## Getting Started
+## Intro
 
-First, run the development server:
+Rainbow Bridge is a key connector and a driver of the multi-chain future that NEAR is building.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+The official Rainbow Bridge frontend allows users to check on their own past and pending cross-chain transactions.
+
+However, monitoring other users' bridge transactions and the assets moving through Rainbow Bridge is not as easy. There is currently no unified way to check and explore bridge transactions.
+
+Bridge-wide stats and transaction info will be of interest to stakeholders and investors that are looking to move capital into the NEAR ecosystem.
+
+Additionally, DeFi project teams looking to integrate with Rainbow Bridge will want to monitor the current state of bridge activity.
 
 ## Rainbow Bridge Data API
 
@@ -50,10 +54,18 @@ As Rainbow Bridge connects new chains, Rainbow Bridge Explorer can be upgraded t
 2. Writing a query for transactions originating from the chain in `/queries`
 3. Adding the query to the api routes in `/api`
 
+## Local development
+
+Run `yarn install` or `npm install`, then start the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The easiest way to deploy is with Vercel:

@@ -1,5 +1,17 @@
 const tokenIcon = (tokenSymbol) => {
   let icon;
+
+  // const assetListCheck = await fetch(
+  //   "https://raw.githubusercontent.com/aurora-is-near/bridge-assets/master/tokens/" +
+  //     tokenSymbol +
+  //     ".svg"
+  // ).then((r) => {
+  //   if (r.ok) {
+  //   } else {
+  //     console.log("doesn't exist");
+  //   }
+  // });
+
   if (!tokenSymbol) {
     icon = undefined;
   } else if (tokenSymbol.toUpperCase() == "NEAR") {

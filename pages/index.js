@@ -17,7 +17,7 @@ function TxList({ chain }) {
   const { data, error } = useSWR("/api/transactions/recent", fetcher);
   const { mutate } = useSWRConfig();
 
-  if (error) return <div>failed to load</div>;
+  if (error) return <div>{"failed to load: " + JSON.stringify(error)}</div>;
   if (!data)
     return (
       <Stack>
