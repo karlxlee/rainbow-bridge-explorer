@@ -56,7 +56,9 @@ As Rainbow Bridge connects new chains, Rainbow Bridge Explorer can be upgraded t
 
 ## Local development
 
-Run `yarn install` or `npm install`, then start the development server:
+- Run `yarn install` or `npm install`
+- Check .env.example and create your own .env file with keys filled in (enter your own Etherscan API key and an Infura project ID)
+- Start the development server:
 
 ```bash
 npm run dev
@@ -68,4 +70,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Deploy
 
-The easiest way to deploy is with Vercel:
+The easiest way to deploy is with Vercel. You'll be prompted to fill in the required environment variables (enter your own Etherscan API key and an Infura project ID):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkarlxlee%2Frainbow-bridge-explorer&env=ETHERSCAN_KEY,INFURA_PROJECT_ID)
