@@ -166,61 +166,100 @@ export async function auroraTxByAddress(
   address,
   offset,
   startTimestamp,
-  endTimestamp
+  endTimestamp,
+  type
 ) {
   let txList = [];
   let errors = [];
-  try {
-    const allTx = await fetch(
-      `https://explorer.mainnet.aurora.dev/api?module=account&action=txlist&starttimestamp=` +
-        startTimestamp +
-        `&endtimestamp=` +
-        endTimestamp +
-        `&sort=desc&address=` +
-        address +
-        (offset ? "&page=1&offset=" + offset : "")
-    ).then((r) => r.json());
-
-    if ((allTx.message = "OK")) {
-      txList.push(...allTx.result);
-    } else {
-      console.log(allTx.message);
-      errors.push(allTx.message);
+  if (type == "token") {
+    console.log("getByAddress type is token");
+    try {
+      const tokenTransfers = await fetch(
+        `https://explorer.mainnet.aurora.dev/api?module=account&action=tokentx&starttimestamp=` +
+          startTimestamp +
+          `&endtimestamp=` +
+          endTimestamp +
+          `&sort=desc&address=` +
+          address +
+          (offset ? "&page=1&offset=" + offset : "")
+      ).then((r) => r.json());
+      console.log(tokenTransfers);
+      if ((tokenTransfers.message = "OK")) {
+        txList.push(
+          ...tokenTransfers.result.filter(
+            (entry) => entry.to == addresses["aurora"]["erc20"]["burn"]
+          )
+        );
+      } else {
+        console.log(tokenTransfers.message);
+        errors.push(tokenTransfers.message);
+      }
+      const labelled = await labelTransactions(txList);
+      return {
+        tx: labelled.tx,
+        errors: errors.push(labelled.errors),
+      };
+    } catch (error) {
+      console.log(error);
+      errors.push(JSON.stringify(error));
+      return {
+        tx: txList,
+        errors,
+      };
     }
+  } else {
+    try {
+      const allTx = await fetch(
+        `https://explorer.mainnet.aurora.dev/api?module=account&action=txlist&starttimestamp=` +
+          startTimestamp +
+          `&endtimestamp=` +
+          endTimestamp +
+          `&sort=desc&address=` +
+          address +
+          (offset ? "&page=1&offset=" + offset : "")
+      ).then((r) => r.json());
 
-    const tokenTransfers = await fetch(
-      `https://explorer.mainnet.aurora.dev/api?module=account&action=tokentx&starttimestamp=` +
-        startTimestamp +
-        `&endtimestamp=` +
-        endTimestamp +
-        `&sort=desc&address=` +
-        address +
-        (offset ? "&page=1&offset=" + offset : "")
-    ).then((r) => r.json());
-    console.log(tokenTransfers);
-    if ((tokenTransfers.message = "OK")) {
-      txList.push(
-        ...tokenTransfers.result.filter(
-          (entry) => entry.to == addresses["aurora"]["erc20"]["burn"]
-        )
-      );
-    } else {
-      console.log(tokenTransfers.message);
-      errors.push(tokenTransfers.message);
+      if ((allTx.message = "OK")) {
+        txList.push(...allTx.result);
+      } else {
+        console.log(allTx.message);
+        errors.push(allTx.message);
+      }
+
+      const tokenTransfers = await fetch(
+        `https://explorer.mainnet.aurora.dev/api?module=account&action=tokentx&starttimestamp=` +
+          startTimestamp +
+          `&endtimestamp=` +
+          endTimestamp +
+          `&sort=desc&address=` +
+          address +
+          (offset ? "&page=1&offset=" + offset : "")
+      ).then((r) => r.json());
+      console.log(tokenTransfers);
+      if ((tokenTransfers.message = "OK")) {
+        txList.push(
+          ...tokenTransfers.result.filter(
+            (entry) => entry.to == addresses["aurora"]["erc20"]["burn"]
+          )
+        );
+      } else {
+        console.log(tokenTransfers.message);
+        errors.push(tokenTransfers.message);
+      }
+      console.log("length of txlist: " + txList.length);
+      const labelled = await labelTransactions(txList);
+      return {
+        tx: labelled.tx,
+        errors: errors.push(labelled.errors),
+      };
+    } catch (error) {
+      console.log(error);
+      errors.push(JSON.stringify(error));
+      return {
+        tx: txList,
+        errors,
+      };
     }
-    console.log("length of txlist: " + txList.length);
-    const labelled = await labelTransactions(txList);
-    return {
-      tx: labelled.tx,
-      errors: errors.push(labelled.errors),
-    };
-  } catch (error) {
-    console.log(error);
-    errors.push(JSON.stringify(error));
-    return {
-      tx: txList,
-      errors,
-    };
   }
 }
 
@@ -228,20 +267,21 @@ export async function auroraRecentTx() {
   let txList = [];
   let errors = [];
 
-  // let [ethToNearTx, ethToEthereumTx] = await Promise.all([
-  //   auroraTxByAddress(addresses["aurora"]["eth"]["toNear"], 2),
-  //   auroraTxByAddress(addresses["aurora"]["eth"]["toEthereum"], 2),
-  // ]);
-  // console.log("ethtonear " + ethToNearTx.tx.length);
-  // console.log("ethtoeth " + ethToEthereumTx.tx.length);
-
-  let tokenTx = await auroraTxByAddress(
-    addresses["aurora"]["erc20"]["burn"],
-    4
-  );
+  let [ethToNearTx, ethToEthereumTx, tokenTx] = await Promise.all([
+    auroraTxByAddress(addresses["aurora"]["eth"]["toNear"], 2),
+    auroraTxByAddress(addresses["aurora"]["eth"]["toEthereum"], 2),
+    await auroraTxByAddress(
+      addresses["aurora"]["erc20"]["burn"],
+      200,
+      "",
+      "",
+      "token"
+    ),
+  ]);
+  console.log("ethtonear " + ethToNearTx.tx.length);
+  console.log("ethtoeth " + ethToEthereumTx.tx.length);
   console.log("token " + tokenTx.tx.length);
-  // txList = [...ethToNearTx.tx, ...ethToEthereumTx.tx];
-  txList = [...tokenTx.tx];
+  txList = [...ethToNearTx.tx, ...ethToEthereumTx.tx, ...tokenTx.tx];
   txList.sort((a, b) => b.blockNumber - a.blockNumber);
   console.log("aur txList " + txList.length);
   return {
