@@ -14,53 +14,54 @@ import { useSWRConfig } from "swr";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function TxList({ chain }) {
-  const { data, error } = useSWR("/api/transactions/recent", fetcher);
-  const { mutate } = useSWRConfig();
+  const { data } = useSWR("/api/transactions/recent", fetcher);
+  // const { mutate } = useSWRConfig();
 
-  if (error) return <div>{"failed to load: " + JSON.stringify(error)}</div>;
-  if (!data)
-    return (
-      <Stack>
-        {[...Array(10).keys()].map((key) => (
-          <Skeleton
-            key={key}
-            p={6}
-            borderWidth={1}
-            borderRadius="md"
-            display="flex"
-            flexWrap="wrap"
-            alignItems="center"
-          ></Skeleton>
-        ))}
-      </Stack>
-    );
+  // const LoadingSkeleton = () => (
+  //   <Stack>
+  //     {[...Array(10).keys()].map((key) => (
+  //       <Skeleton
+  //         key={key}
+  //         p={6}
+  //         borderWidth={1}
+  //         borderRadius="md"
+  //         display="flex"
+  //         flexWrap="wrap"
+  //         alignItems="center"
+  //       ></Skeleton>
+  //     ))}
+  //   </Stack>
+  // );
+
+  // if (error) {
+  // mutate("/api/transactions/recent");
+  // return <TxStack />;
+  // }
 
   // render data
-  if (data.tx) {
+  // if (data.tx) {
+  //   return <TxStack />;
+  // } else {
+  //   mutate("/api/transactions/recent");
+
+  console.log(Object.keys(data));
+  console.log(data);
+  if ("data" in data) {
     return (
       <Stack>
-        {data.tx[chain] &&
-          data.tx[chain].map((tx) => (
+        {data.data[chain] &&
+          data.data[chain].map((tx) => (
             <TxCard key={tx.hash} clickable={true} {...tx} />
           ))}
       </Stack>
     );
   } else {
-    mutate("/api/transactions/recent");
-
     return (
       <Stack>
-        {[...Array(10).keys()].map((key) => (
-          <Skeleton
-            key={key}
-            p={10}
-            borderWidth={1}
-            borderRadius="md"
-            display="flex"
-            flexWrap="wrap"
-            alignItems="center"
-          ></Skeleton>
-        ))}
+        {data[chain] &&
+          data[chain].map((tx) => (
+            <TxCard key={tx.hash} clickable={true} {...tx} />
+          ))}
       </Stack>
     );
   }
@@ -70,43 +71,40 @@ export default function Home({ fallback, ...props }) {
   return (
     <Page>
       <Hero />
-      <Grid templateColumns={"repeat(2, 1fr)"} gap={2}>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-          <Heading py={8} as="h3" size="md">
-            Recent transactions from NEAR
-          </Heading>
-          <SWRConfig value={{ fallback }}>
+      <SWRConfig value={{ fallback }}>
+        <Grid templateColumns={"repeat(2, 1fr)"} gap={2}>
+          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+            <Heading py={8} as="h3" size="md">
+              Recent transactions from NEAR
+            </Heading>
+
             <TxList chain="near" />
-          </SWRConfig>
-        </GridItem>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-          <Heading py={8} as="h3" size="md">
-            Recent transactions from Ethereum
-          </Heading>
-          <SWRConfig value={{ fallback }}>
-            <TxList chain="ethereum" />{" "}
-          </SWRConfig>
-        </GridItem>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-          <Heading py={8} as="h3" size="md">
-            Recent transactions from Aurora
-          </Heading>
-          <SWRConfig value={{ fallback }}>
+          </GridItem>
+          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+            <Heading py={8} as="h3" size="md">
+              Recent transactions from Ethereum
+            </Heading>
+            <TxList chain="ethereum" />
+          </GridItem>
+          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+            <Heading py={8} as="h3" size="md">
+              Recent transactions from Aurora
+            </Heading>
             <TxList chain="aurora" />
-          </SWRConfig>
-        </GridItem>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-          <Heading py={8} as="h3" size="md">
-            Browse bridge assets
-          </Heading>
-          <Stack>
-            {props.tokens &&
-              props.tokens.map((token) => (
-                <AssetCard token={token} key={token.symbol} />
-              ))}
-          </Stack>
-        </GridItem>
-      </Grid>
+          </GridItem>
+          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+            <Heading py={8} as="h3" size="md">
+              Browse bridge assets
+            </Heading>
+            <Stack>
+              {props.tokens &&
+                props.tokens.map((token) => (
+                  <AssetCard token={token} key={token.symbol} />
+                ))}
+            </Stack>
+          </GridItem>
+        </Grid>
+      </SWRConfig>
     </Page>
   );
 }
@@ -122,7 +120,7 @@ export async function getStaticProps() {
       // errors,
       tokens: shuffledTokens.slice(0, 10),
       fallback: {
-        "/api/transactions/recent": { tx, errors },
+        "/api/transactions/recent": tx,
       },
     }, // will be passed to the page component as props
     revalidate: 60,
