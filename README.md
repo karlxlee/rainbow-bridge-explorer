@@ -2,9 +2,12 @@
 
 ### Live demo: https://rainbow-bridge-explorer.vercel.app
 
-For the NEAR MetaBUILD Hackathon
-
 Rainbow Bridge Explorer is both a front-end and a public REST API for exploring bridge transactions between NEAR, Aurora, and Ethereum.
+
+For the NEAR MetaBUILD Hackathon
+ 
+Intro video: https://youtu.be/TgtCpUHPf00
+
 
 ## Intro
 
@@ -17,6 +20,9 @@ However, monitoring other users' bridge transactions and the assets moving throu
 Bridge-wide stats and transaction info will be of interest to stakeholders and investors that are looking to move capital into the NEAR ecosystem.
 
 Additionally, DeFi project teams looking to integrate with Rainbow Bridge will want to monitor the current state of bridge activity.
+
+![image](https://user-images.githubusercontent.com/30199031/155185887-1b3283ee-d14d-4b9d-a49b-2d06593eed49.png)
+
 
 ## Rainbow Bridge Data API
 
