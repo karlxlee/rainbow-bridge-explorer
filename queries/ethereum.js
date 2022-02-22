@@ -287,8 +287,6 @@ export async function ethereumTxByHash(hash) {
         .then((r) => r.result[0]);
       tx["timestamp"] = txObject["timeStamp"];
 
-      console.log(txObject);
-
       tx["logs"] = logs;
       tx["sender"] = data.from;
       const { destination, recipient } = await decodeEthRecipient(logs);

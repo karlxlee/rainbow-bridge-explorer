@@ -61,7 +61,6 @@ async function labelTransactions(transactions) {
       });
     }
   }
-  console.log(txList);
   return txList;
 }
 

@@ -1,4 +1,4 @@
-import { Grid, GridItem, Box, Center, Heading } from "@chakra-ui/react";
+import { Grid, GridItem, Box, Center, Heading, Text } from "@chakra-ui/react";
 import ChakraNextImage from "@/components/ChakraNextImage";
 import SearchBar from "@/components/SearchBar";
 
@@ -19,7 +19,10 @@ const Hero = () => {
           <Heading fontWeight="bold">
             Explore your activity on Rainbow Bridge
           </Heading>
-          <Box mt={10} />
+          <Text mt={4}>
+            Find any bridge transaction between NEAR, Aurora and Ethereum.
+          </Text>
+          <Box mt={4} />
           <SearchBar />
         </GridItem>
         <GridItem colSpan={{ sm: 2, md: 1, lg: 1 }} pt={{ sm: 24, md: 0 }}>

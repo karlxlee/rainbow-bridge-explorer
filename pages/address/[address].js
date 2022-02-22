@@ -26,12 +26,19 @@ import useSWR, { SWRConfig } from "swr";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Address(props) {
-  const { error, data } = useSWR(
-    "/api/transactions?address=" + props.address,
-    fetcher
-  );
-  if (error) return <div>{"failed to load: " + JSON.stringify(error)}</div>;
-  if (!data) return <Skeleton height="20em" />;
+  const TxHistory = () => {
+    const { error, data } = useSWR(
+      "/api/transactions?address=" + props.address,
+      fetcher
+    );
+    if (error) return <div>{"failed to load: " + JSON.stringify(error)}</div>;
+    if (!data) return <Skeleton height="20em" />;
+    else {
+      return data.data.map((tx) => (
+        <TxCard key={tx.hash} {...tx} showHash={true} />
+      ));
+    }
+  };
 
   return (
     <Page title={"Address: " + props.address}>
@@ -60,9 +67,7 @@ export default function Address(props) {
         </VStack>
       )} */}
 
-      {data.data.map((tx) => (
-        <TxCard key={tx.hash} {...tx} showHash={true} />
-      ))}
+      <TxHistory />
     </Page>
   );
 }

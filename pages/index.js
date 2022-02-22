@@ -14,35 +14,7 @@ import { useSWRConfig } from "swr";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function TxList({ chain }) {
-  const { data } = useSWR("/api/transactions/recent", fetcher);
-  // const { mutate } = useSWRConfig();
-
-  // const LoadingSkeleton = () => (
-  //   <Stack>
-  //     {[...Array(10).keys()].map((key) => (
-  //       <Skeleton
-  //         key={key}
-  //         p={6}
-  //         borderWidth={1}
-  //         borderRadius="md"
-  //         display="flex"
-  //         flexWrap="wrap"
-  //         alignItems="center"
-  //       ></Skeleton>
-  //     ))}
-  //   </Stack>
-  // );
-
-  // if (error) {
-  // mutate("/api/transactions/recent");
-  // return <TxStack />;
-  // }
-
-  // render data
-  // if (data.tx) {
-  //   return <TxStack />;
-  // } else {
-  //   mutate("/api/transactions/recent");
+  const { data } = useSWR("/api/transactions/recent?from=" + chain, fetcher);
 
   console.log(Object.keys(data));
   console.log(data);
@@ -114,7 +86,9 @@ export default function Home({ fallback, ...props }) {
 }
 
 export async function getStaticProps() {
-  const { tx, errors } = await recent();
+  const { tx: near } = await recent("near");
+  const { tx: ethereum } = await recent("ethereum");
+  const { tx: aurora } = await recent("aurora");
   const tokens = await fetchBridgeTokenList();
   const shuffledTokens = tokens.sort(() => 0.5 - Math.random());
 
@@ -124,7 +98,9 @@ export async function getStaticProps() {
       // errors,
       tokens: shuffledTokens.slice(0, 10),
       fallback: {
-        "/api/transactions/recent": tx,
+        "/api/transactions/recent?from=near": near,
+        "/api/transactions/recent?from=ethereum": ethereum,
+        "/api/transactions/recent?from=aurora": aurora,
       },
     }, // will be passed to the page component as props
     revalidate: 60,

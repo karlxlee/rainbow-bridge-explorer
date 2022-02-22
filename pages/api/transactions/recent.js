@@ -2,7 +2,7 @@ import { ethereumRecentTx } from "@/queries/ethereum";
 import { nearRecentTx } from "@/queries/near";
 import { auroraRecentTx } from "@/queries/aurora";
 
-export async function recent() {
+export async function recent(from) {
   const routes = [
     { from: "ethereum", useQuery: ethereumRecentTx },
     { from: "near", useQuery: nearRecentTx },
@@ -12,7 +12,8 @@ export async function recent() {
   let allTx = {};
   let allErrors = [];
 
-  for (let route of routes) {
+  if (from) {
+    let route = routes.filter((entry) => entry.from == from.toLowerCase())[0];
     const { tx, errors } = await route.useQuery();
     errors &&
       errors.length &&
@@ -20,17 +21,27 @@ export async function recent() {
     allTx[route.from] = [];
     tx && tx.length && tx.map(async (entry) => allTx[route.from].push(entry));
     console.log("finished " + route.from);
+  } else {
+    for (let route of routes) {
+      const { tx, errors } = await route.useQuery();
+      errors &&
+        errors.length &&
+        errors.map(async (error) => allErrors.push(error));
+      allTx[route.from] = [];
+      tx && tx.length && tx.map(async (entry) => allTx[route.from].push(entry));
+      console.log("finished " + route.from);
+    }
   }
   return { tx: allTx, errors: allErrors };
 }
 
 export default async function handler(req, res) {
-  const { method } = req;
+  const { query, method } = req;
   switch (method) {
     case "GET":
       // Get data from your database
       try {
-        const { tx, errors } = await recent();
+        const { tx, errors } = await recent(query.from);
         res.status(200).json({
           object: "list",
           data: tx,
