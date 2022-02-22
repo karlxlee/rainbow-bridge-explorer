@@ -11,11 +11,9 @@ export async function recent() {
 
   let allTx = {};
   let allErrors = [];
+
   for (let route of routes) {
     const { tx, errors } = await route.useQuery();
-    if (route.from == "aurora") {
-      console.log(tx);
-    }
     errors &&
       errors.length &&
       errors.map(async (error) => allErrors.push(error));

@@ -71,40 +71,44 @@ export default function Home({ fallback, ...props }) {
   return (
     <Page>
       <Hero />
-      <SWRConfig value={{ fallback }}>
-        <Grid templateColumns={"repeat(2, 1fr)"} gap={2}>
-          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-            <Heading py={8} as="h3" size="md">
-              Recent transactions from NEAR
-            </Heading>
+      <Grid templateColumns={"repeat(2, 1fr)"} gap={2}>
+        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+          <Heading py={8} as="h3" size="md">
+            Recent transactions from NEAR
+          </Heading>
 
+          <SWRConfig value={{ fallback }}>
             <TxList chain="near" />
-          </GridItem>
-          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-            <Heading py={8} as="h3" size="md">
-              Recent transactions from Ethereum
-            </Heading>
+          </SWRConfig>
+        </GridItem>
+        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+          <Heading py={8} as="h3" size="md">
+            Recent transactions from Ethereum
+          </Heading>
+          <SWRConfig value={{ fallback }}>
             <TxList chain="ethereum" />
-          </GridItem>
-          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-            <Heading py={8} as="h3" size="md">
-              Recent transactions from Aurora
-            </Heading>
+          </SWRConfig>
+        </GridItem>
+        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+          <Heading py={8} as="h3" size="md">
+            Recent transactions from Aurora
+          </Heading>
+          <SWRConfig value={{ fallback }}>
             <TxList chain="aurora" />
-          </GridItem>
-          <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
-            <Heading py={8} as="h3" size="md">
-              Browse bridge assets
-            </Heading>
-            <Stack>
-              {props.tokens &&
-                props.tokens.map((token) => (
-                  <AssetCard token={token} key={token.symbol} />
-                ))}
-            </Stack>
-          </GridItem>
-        </Grid>
-      </SWRConfig>
+          </SWRConfig>
+        </GridItem>
+        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+          <Heading py={8} as="h3" size="md">
+            Browse bridge assets
+          </Heading>
+          <Stack>
+            {props.tokens &&
+              props.tokens.map((token) => (
+                <AssetCard token={token} key={token.symbol} />
+              ))}
+          </Stack>
+        </GridItem>
+      </Grid>
     </Page>
   );
 }
