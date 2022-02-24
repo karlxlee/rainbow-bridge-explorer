@@ -3,7 +3,14 @@ import Page from "@/components/Page";
 import Hero from "@/components/Hero";
 import TxCard from "@/components/TxCard";
 import AssetCard from "@/components/AssetCard";
-import { Grid, GridItem, Stack, Heading, Skeleton } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  Stack,
+  Heading,
+  Skeleton,
+  Box,
+} from "@chakra-ui/react";
 
 import { recent } from "@/api/transactions/recent";
 import { fetchBridgeTokenList } from "@/api/assets/index.js";
@@ -44,16 +51,17 @@ export default function Home({ fallback, ...props }) {
     <Page>
       <Hero />
       <Grid templateColumns={"repeat(2, 1fr)"} gap={2}>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, sm: 2, md: 2, lg: 1 }}>
           <Heading py={8} as="h3" size="md">
             Recent transactions from NEAR
           </Heading>
-
-          <SWRConfig value={{ fallback }}>
-            <TxList chain="near" />
-          </SWRConfig>
+          <Box>
+            <SWRConfig value={{ fallback }}>
+              <TxList chain="near" />
+            </SWRConfig>
+          </Box>
         </GridItem>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, sm: 2, md: 2, lg: 1 }}>
           <Heading py={8} as="h3" size="md">
             Recent transactions from Ethereum
           </Heading>
@@ -61,7 +69,7 @@ export default function Home({ fallback, ...props }) {
             <TxList chain="ethereum" />
           </SWRConfig>
         </GridItem>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, sm: 2, md: 2, lg: 1 }}>
           <Heading py={8} as="h3" size="md">
             Recent transactions from Aurora
           </Heading>
@@ -69,7 +77,7 @@ export default function Home({ fallback, ...props }) {
             <TxList chain="aurora" />
           </SWRConfig>
         </GridItem>
-        <GridItem colSpan={{ sm: 2, md: 2, lg: 1 }}>
+        <GridItem colSpan={{ base: 2, sm: 2, md: 2, lg: 1 }}>
           <Heading py={8} as="h3" size="md">
             Browse bridge assets
           </Heading>

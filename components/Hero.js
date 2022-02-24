@@ -14,8 +14,8 @@ const Hero = () => {
         src="/rainbow-bridge.svg"
         mb={6}
       /> */}
-      <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(2, 1fr)">
-        <GridItem gap={4} colSpan={{ sm: 2, md: 1, lg: 1 }}>
+      <Grid templateColumns="repeat(2, 1fr)">
+        <GridItem gap={4} colSpan={{ base: 2, sm: 2, md: 1, lg: 1 }}>
           <Heading fontWeight="bold">
             Explore your activity on Rainbow Bridge
           </Heading>
@@ -25,7 +25,10 @@ const Hero = () => {
           <Box mt={4} />
           <SearchBar />
         </GridItem>
-        <GridItem colSpan={{ sm: 2, md: 1, lg: 1 }} pt={{ sm: 24, md: 0 }}>
+        <GridItem
+          colSpan={{ base: 2, sm: 2, md: 1, lg: 1 }}
+          pt={{ sm: 24, md: 0 }}
+        >
           <Center>
             <Box>
               <ChainCircle chain="aurora" />
